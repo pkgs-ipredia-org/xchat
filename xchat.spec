@@ -1,9 +1,7 @@
-%define WithoutGNOME 1
-
 Summary: A GTK+ IRC (chat) client.
 Name: xchat
 Version: 1.8.8
-Release: 4
+Release: 5
 Epoch: 1
 Group: Applications/Internet
 License: GPL
@@ -15,7 +13,7 @@ Patch4: xchat-1.8.1-konqueror.patch
 Patch5: xchat-1.8.4-fix-USE_GNOME.patch
 Patch6: xchat-1.8.7-use-sysconf-to-detect-cpus.patch
 
-%{?!WithoutGNOME:BuildRequires: gnome-libs}
+BuildRequires: gnome-libs
 
 %description
 X-Chat is an IRC client for the X Window System and GTK+. X-Chat is
@@ -29,18 +27,18 @@ fairly easy to use and includes a nice interface.
 
 %build
 %configure --disable-panel --disable-textfe --enable-japanese-conv \
-           --enable-openssl --enable-ipv6 %{?WithoutGNOME:--disable-gnome}
+           --enable-openssl --enable-ipv6
 
 make
 
 %install
 rm -rf $RPM_BUILD_ROOT
 %makeinstall
-%if %{WithoutGNOME}
-mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/X11/applnk/Internet $RPM_BUILD_ROOT%{_datadir}/pixmaps
-install -m 644 xchat.desktop $RPM_BUILD_ROOT%{_sysconfdir}/X11/applnk/Internet
-install -m 644 xchat.png $RPM_BUILD_ROOT%{_datadir}/pixmaps
-%endif
+#%if %{WithoutGNOME}
+#mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/X11/applnk/Internet $RPM_BUILD_ROOT%{_datadir}/pixmaps
+#install -m 644 xchat.desktop $RPM_BUILD_ROOT%{_sysconfdir}/X11/applnk/Internet
+#install -m 644 xchat.png $RPM_BUILD_ROOT%{_datadir}/pixmaps
+#%endif
 
 %find_lang %name
 
@@ -48,14 +46,22 @@ install -m 644 xchat.png $RPM_BUILD_ROOT%{_datadir}/pixmaps
 %defattr(-,root,root)
 %doc README ChangeLog doc/xchat.sgml doc/*.html scripts-python scripts-perl
 %{_bindir}/xchat
-%{_sysconfdir}/X11/applnk/Internet/xchat.desktop
+#%if %{WithoutGNOME}
+#%{_sysconfdir}/X11/applnk/Internet/xchat.desktop
+#%else
+%{_datadir}/gnome/apps/Internet/xchat.desktop
+#%endif
 %{_datadir}/pixmaps/*
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
-* Tue Mar 27 2002 Mike A. Harris <mharris@redhat.com> 1.8.8-3
+* Mon Apr  8 2002 Mike A. Harris <mharris@redhat.com> 1.8.8-5
+- Re-enabled GNOME support due to user complaints of pixmaps missing, key
+  bindings, and other fairly important features no longer working.
+
+* Tue Mar 27 2002 Mike A. Harris <mharris@redhat.com> 1.8.8-4
 - Disabled GNOME support since it doesn't seem too useful anyways, and forces
   all xchat users to install GNOME libs even if they use KDE. (#59626)
 - Updated URL and source lines in spec.
