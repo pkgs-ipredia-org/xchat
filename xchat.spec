@@ -1,7 +1,7 @@
 Summary: A GTK+ IRC (chat) client.
 Name: xchat
-Version: 1.8.8
-Release: 5
+Version: 1.8.9
+Release: 1.73.0
 Epoch: 1
 Group: Applications/Internet
 License: GPL
@@ -34,11 +34,10 @@ make
 %install
 rm -rf $RPM_BUILD_ROOT
 %makeinstall
-#%if %{WithoutGNOME}
+
 #mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/X11/applnk/Internet $RPM_BUILD_ROOT%{_datadir}/pixmaps
 #install -m 644 xchat.desktop $RPM_BUILD_ROOT%{_sysconfdir}/X11/applnk/Internet
 #install -m 644 xchat.png $RPM_BUILD_ROOT%{_datadir}/pixmaps
-#%endif
 
 %find_lang %name
 
@@ -47,9 +46,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc README ChangeLog doc/xchat.sgml doc/*.html scripts-python scripts-perl
 %{_bindir}/xchat
 #%if %{WithoutGNOME}
-#%{_sysconfdir}/X11/applnk/Internet/xchat.desktop
+%{_sysconfdir}/X11/applnk/Internet/xchat.desktop
 #%else
-%{_datadir}/gnome/apps/Internet/xchat.desktop
+#%{_datadir}/gnome/apps/Internet/xchat.desktop
 #%endif
 %{_datadir}/pixmaps/*
 
@@ -57,6 +56,11 @@ rm -rf $RPM_BUILD_ROOT
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Mon May 20 2002 Mike A. Harris <mharris@redhat.com> 1.8.9-2
+- Updated to xchat 1.8.9
+- Built security erratum for RHL 7.3, 7.2, 7.1, 7.0, 6.2 for DNS issue
+  reported at http://online.securityfocus.com/bid/4376/info/
+
 * Mon Apr  8 2002 Mike A. Harris <mharris@redhat.com> 1.8.8-5
 - Re-enabled GNOME support due to user complaints of pixmaps missing, key
   bindings, and other fairly important features no longer working.
