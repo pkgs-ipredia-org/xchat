@@ -1,9 +1,9 @@
 %define Build_7x	0
 
-Summary: A GTK+ IRC (chat) client.
+Summary: A popular and easy to use graphical IRC (chat) client
 Name: xchat
-Version: 1.8.10
-Release: 8
+Version: 1.8.11
+Release: 7
 Epoch: 1
 Group: Applications/Internet
 License: GPL
@@ -17,19 +17,19 @@ Patch5: xchat-1.8.4-fix-USE_GNOME.patch
 Patch6: xchat-1.8.7-use-sysconf-to-detect-cpus.patch
 Patch7: xchat-1.8.9-perlcrypt.patch
 Patch8: xchat-1.8.9-korean-fontset.patch
-Patch9: xc1810fixme.diff
-Patch10: xc1810fixme2.diff
-Patch11: xchat-1.8.10-beep-beep-beep.patch
+Patch13: xchat-multilib.patch
+Patch14: xc1811fixststint.diff
+Patch15: xchat-1.8.11-freenode.patch
 
-BuildRequires: gnome-libs perl
+BuildRequires: gnome-libs perl python-devel autoconf openssl-devel pkgconfig
 
 # xchat MUST have the version of perl installed which was used to compile
 # it, or else the embeded perl interpreter will break.
 Requires: perl = %(rpm -q --qf '%%{version}\n' perl)
 
 %description
-X-Chat is a graphical IRC chat client for the X Window System. X-Chat is
-fairly easy to use and includes a nice GNOME/GTK+ based user interface.
+X-Chat is an easy to use graphical IRC chat client for the X Window
+System. 
 
 %prep
 %setup -q
@@ -38,13 +38,23 @@ fairly easy to use and includes a nice GNOME/GTK+ based user interface.
 %patch6 -p0 -b .use-sysconf-to-detect-cpus
 %patch7 -p1 -b .perlcrypt
 %patch8 -p0 -b .korean-fontset
-#%patch9 -p0 -b .xc1810fixme
-#%patch10 -p0 -b .xc1810fixme2
-%patch11 -p0 -b .xc1810fixme3
+%patch13 -p1 -b .multilib
+%patch14 -p1 -b .fixststint
+%patch15 -p1 -b .freenode
+
+autoconf
 
 %build
+# Remove CVS files from source dirs so they're not installed into doc dirs.
+find . -name CVS -type d | xargs rm -rf
+
 export CFLAGS=$(perl -MExtUtils::Embed -e ccopts)
 export LDFLAGS=$(perl -MExtUtils::Embed -e ldopts)
+if pkg-config openssl ; then
+	export CFLAGS="$CFLAGS `pkg-config --cflags openssl`"
+	export CPPFLAGS="$CPPFLAGS `pkg-config --cflags-only-I openssl`"
+	export LDFLAGS="$LDFLAGS `pkg-config --libs-only-L openssl`"
+fi
 %configure --disable-panel \
            --disable-textfe \
            --enable-japanese-conv \
@@ -52,22 +62,19 @@ export LDFLAGS=$(perl -MExtUtils::Embed -e ldopts)
            --enable-python \
            --enable-ipv6
 
-make
+make %{?_smp_mflags}
 
 %install
 rm -rf $RPM_BUILD_ROOT
 %makeinstall
 
-#mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/X11/applnk/Internet $RPM_BUILD_ROOT%{_datadir}/pixmaps
-#install -m 644 xchat.desktop $RPM_BUILD_ROOT%{_sysconfdir}/X11/applnk/Internet
-#install -m 644 xchat.png $RPM_BUILD_ROOT%{_datadir}/pixmaps
 
 # New style desktop config file
 %if ! %{Build_7x}
 mkdir -p $RPM_BUILD_ROOT/%{_datadir}/applications
 install -m 644 %{SOURCE1} $RPM_BUILD_ROOT/%{_datadir}/applications/net-xchat.desktop
+rm -f $RPM_BUILD_ROOT/etc/X11/applnk/Internet/xchat.desktop
 %endif
-
 
 %find_lang %name
 
@@ -75,20 +82,67 @@ install -m 644 %{SOURCE1} $RPM_BUILD_ROOT/%{_datadir}/applications/net-xchat.des
 %defattr(-,root,root)
 %doc README ChangeLog doc/xchat.sgml doc/*.html scripts-python scripts-perl
 %{_bindir}/xchat
-%if %{Build_7x}
-%{_sysconfdir}/X11/applnk/Internet/xchat.desktop
-%else
+%if ! %{Build_7x}
 %{_datadir}/applications/net-xchat.desktop
+%else
+%{_sysconfdir}/X11/applnk/Internet/xchat.desktop
 %endif
-#%else
-#%{_datadir}/gnome/apps/Internet/xchat.desktop
-#%endif
 %{_datadir}/pixmaps/*
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Wed Feb 19 2003 Bill Nottingham <notting@redhat.com> 1.8.11-7
+- ship single desktop in %{_datadir}/applications, not /etc/X11/applnk
+
+* Fri Jan 31 2003 Mike A. Harris <mharris@redhat.com> 1.8.11-6
+- Added xchat-1.8.11-freenode.patch to rename all openprojects.net entries
+  to freenode.net in the default server list.  Patch courtesy of Dan Burcaw
+  from bug (#81704)
+
+* Wed Jan 22 2003 Mike A. Harris <mharris@redhat.com> 1.8.11-5
+- Removed double .desktop file (#81874,82315)
+
+* Wed Jan 22 2003 Tim Powers <timp@redhat.com> 1.8.11-4
+- rebuilt
+
+* Tue Jan  7 2003 Mike A. Harris <mharris@redhat.com> 1.8.11-3
+- Add bugfix from xchat.org xc1811fixststint.diff
+
+* Tue Jan  7 2003 Mike A. Harris <mharris@redhat.com> 1.8.11-2
+- Remove CVS files from source dirs so they're not installed into doc dirs.
+
+* Tue Jan  7 2003 Mike A. Harris <mharris@redhat.com> 1.8.11-1
+- Update to xchat 1.8.11 bugfix release, fixes various runtime crashes
+- Remove now included patches: xchat-1.8.10-urlhandler-open-in-new-tab.patch,
+  xchat-1.8.10-beep-beep-beep.patch
+
+* Tue Jan  7 2003 Nalin Dahyabhai <nalin@redhat.com> 1.8.10-13
+- Pick up OpenSSL configuration from pkgconfig, if available
+- Add openssl-devel and pkgconfig as buildreqs
+
+* Wed Dec 11 2002 Elliot Lee <sopwith@redhat.com> 1.8.10-12
+- Fix broken libpython path on multilibbed systems (patch13)
+- _smp_mflags
+
+* Tue Nov 26 2002 Mike A. Harris <mharris@redhat.com> 1.8.10-11
+- Added xchat-1.8.10-urlhandler-open-in-new-tab.patch to offer the option of
+  opening a URL in a new tab of an existing browser window rather than a new
+  window
+
+* Sat Nov 23 2002 Mike A. Harris <mharris@redhat.com> 1.8.10-10
+- Added BuildRequires: python-devel to hopefully pick up a missing dep
+  causing package build failure in timp's nightly builds.
+- Removed dead patches
+- Updated package summary and description to be more user friendly by
+  rewording, and removing scary words like GNOME, GTK and other irrelevance
+
+* Wed Nov 13 2002 Mike A. Harris <mharris@redhat.com> 1.8.10-9
+- Made sure {_sysconfdir}/X11/applnk/Internet/xchat.desktop gets packaged
+- Removed some conditional weirdness in %%files list.  This may break xchat
+  erratum releases on Red Hat Linux 7.x.  May need to be fixed in future.
+
 * Fri Aug 23 2002 Mike A. Harris <mharris@redhat.com> 1.8.10-7
 - Added Requires line so that xchat requires the exact version of perl
   be installed, that was used to compile it, since the embedded perl
