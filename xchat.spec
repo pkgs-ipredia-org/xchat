@@ -5,7 +5,7 @@ Summary: A GTK+ IRC (chat) client.
 
 Name: %{name}
 Version: 1.4.2
-Release: 6
+Release: 6j1
 Epoch: 1
 Group: Applications/Internet
 Copyright: GPL
@@ -15,6 +15,7 @@ Url: http://xchat.org
 Source: http://xchat.org/files/source/1.4/xchat-%{version}.tar.gz
 Patch: xchat-1.4.2-fixed.patch
 Patch1: xchat-1.4.2-nourltoshell.patch
+Patch10: xchat-1.4.2-ja.patch
 Buildroot: /var/tmp/%{name}-%{version}-%{release}-root
 
 %description
@@ -30,8 +31,11 @@ Install xchat if you need an IRC client for X.
 %patch -p1 -b .fixed
 %patch1 -p1 -b .nourltoshell
 
+%patch10 -p1 -b .ja
+
 %build
-%configure --disable-panel --disable-textfe
+%configure --disable-panel --disable-textfe \
+--enable-japanese-conv --enable-nls
 make
 
 %install
@@ -50,6 +54,9 @@ if [ -d $RPM_BUILD_ROOT ]; then rm -r $RPM_BUILD_ROOT; fi
 rm -r $RPM_BUILD_ROOT
 
 %changelog
+* Fri Aug 25 2000 Satoru Sato <ssato@redhat.com>
+- apply nls patch(from xchat-ja debian package)
+
 * Sat Aug 19 2000 Havoc Pennington <hp@redhat.com>
 - Don't use /bin/sh to interpret URLs from the net
 
