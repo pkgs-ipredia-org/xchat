@@ -3,7 +3,7 @@
 Summary: A GTK+ IRC (chat) client.
 Name: xchat
 Version: 1.8.10
-Release: 5
+Release: 6
 Epoch: 1
 Group: Applications/Internet
 License: GPL
@@ -18,6 +18,8 @@ Patch6: xchat-1.8.7-use-sysconf-to-detect-cpus.patch
 Patch7: xchat-1.8.9-perlcrypt.patch
 Patch8: xchat-1.8.9-korean-fontset.patch
 Patch9: xc1810fixme.diff
+Patch10: xc1810fixme2.diff
+Patch11: xchat-1.8.10-beep-beep-beep.patch
 
 BuildRequires: gnome-libs perl
 
@@ -32,7 +34,9 @@ fairly easy to use and includes a nice GNOME/GTK+ based user interface.
 %patch6 -p0 -b .use-sysconf-to-detect-cpus
 %patch7 -p1 -b .perlcrypt
 %patch8 -p0 -b .korean-fontset
-%patch9 -p0 -b .xc1810fixme
+#%patch9 -p0 -b .xc1810fixme
+#%patch10 -p0 -b .xc1810fixme2
+%patch11 -p0 -b .xc1810fixme3
 
 %build
 export CFLAGS=$(perl -MExtUtils::Embed -e ccopts)
@@ -81,7 +85,10 @@ install -m 644 %{SOURCE1} $RPM_BUILD_ROOT/%{_datadir}/applications/net-xchat.des
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
-* Wed Aug 14 2002 Jonathan Blandford <jrb@redhat.com>
+* Thu Aug 15 2002 Mike A. Harris <mharris@redhat.com> 1.8.10-6
+- Fix Bill's beep beep beep bug (#71651)
+
+* Wed Aug 14 2002 Jonathan Blandford <jrb@redhat.com> 1.8.10-5
 - actually install the desktop file.
 
 * Fri Aug  9 2002 Mike A. Harris <mharris@redhat.com> 1.8.10-3
