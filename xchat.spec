@@ -1,21 +1,25 @@
 %define name xchat
+%define version 1.6.1
+%define release 2tc1
 %define prefix /usr
 
-Summary: A GTK+ IRC (chat) client.
+Summary: A GTK+ IRC (chat) client
 
 Name: %{name}
-Version: 1.4.2
-Release: 6j1
+Version: %{version}
+Release: %{release}
 Epoch: 1
 Group: Applications/Internet
 Copyright: GPL
+Packager: Red Hat, Inc. <http://bugzilla.redhat.com/bugzilla>
+Vendor: Red Hat, Inc.
 
 Url: http://xchat.org
 
-Source: http://xchat.org/files/source/1.4/xchat-%{version}.tar.gz
-Patch: xchat-1.4.2-fixed.patch
-Patch1: xchat-1.4.2-nourltoshell.patch
-Patch10: xchat-1.4.2-ja.patch
+Source: http://xchat.org/files/source/1.6/xchat-%{version}.tar.gz
+Source1: xchat-zh_TW.po
+Source2: xchat-zh_CN.po
+Patch: xchat-1.6.1-mb.diff
 Buildroot: /var/tmp/%{name}-%{version}-%{release}-root
 
 %description
@@ -23,54 +27,54 @@ X-Chat is yet another IRC client for the X Window System and
 GTK+. X-Chat is fairly easy to use, compared to other GTK+ IRC
 clients, and the interface is quite nicely designed.
 
-Install xchat if you need an IRC client for X.
-
 %prep
-%setup -q
-# fix desktop entry
-%patch -p1 -b .fixed
-%patch1 -p1 -b .nourltoshell
 
-%patch10 -p1 -b .ja
+%setup
+%patch -p0 -b .mb
 
 %build
-%configure --disable-panel --disable-textfe \
---enable-japanese-conv --enable-nls
+#%configure --disable-panel --disable-textfe --enable-openssl
+CFLAGS="$RPM_OPT_FLAGS" ./configure --prefix=%{prefix} \
+	--disable-panel --disable-textfe --enable-openssl
 make
 
 %install
 if [ -d $RPM_BUILD_ROOT ]; then rm -r $RPM_BUILD_ROOT; fi
-%makeinstall
+mkdir -p $RPM_BUILD_ROOT%{prefix}
+make prefix=$RPM_BUILD_ROOT%{prefix} install-strip
+
+# install languages by hand
+mkdir -p $RPM_BUILD_ROOT/usr/share/locale/zh_TW/LC_MESSAGES
+msgfmt -o $RPM_BUILD_ROOT/usr/share/locale/zh_TW/LC_MESSAGES/xchat.mo %{SOURCE1}
+mkdir -p $RPM_BUILD_ROOT/usr/share/locale/zh_CN/LC_MESSAGES
+msgfmt -o $RPM_BUILD_ROOT/usr/share/locale/zh_CN/LC_MESSAGES/xchat.mo %{SOURCE2}
 
 %files
 %defattr(-,root,root)
-%doc README ChangeLog doc/xchat.sgml doc/*.html
+%doc README ChangeLog doc/xchat.sgml
 %attr(755,root,root) %{prefix}/bin/xchat
 %{prefix}/share/gnome/apps/Internet/xchat.desktop
 %{prefix}/share/pixmaps/xchat.png
-%{prefix}/share/locale/*/*/*
+%{prefix}/share/locale/*/LC_MESSAGES/*
 
 %clean
-rm -r $RPM_BUILD_ROOT
+[ -n "$RPM_BUILD_ROOT" -a "$RPM_BUILD_ROOT" != / ] && rm -rf $RPM_BUILD_ROOT
 
 %changelog
-* Fri Aug 25 2000 Satoru Sato <ssato@redhat.com>
-- apply nls patch(from xchat-ja debian package)
+* Fri Dec 8 2000 Chih-Wei Huang <cwhuang@linux.org.tw>
+- add Epoch to ensure upgrade safely from RH7
+- change zh_TW.Big5.po to zh_TW.po
+- add --enable-openssl
 
-* Sat Aug 19 2000 Havoc Pennington <hp@redhat.com>
-- Don't use /bin/sh to interpret URLs from the net
+* Tue Dec 5 2000 Andrew Lee <andrew@linux.org.tw>
+- update to 1.6.1
+- new xchat-zh_TW.Big5.po
 
-* Fri Aug 11 2000 Jonathan Blandford <jrb@redhat.com>
-- Updated Epoch
+* Sat Sep 2 2000 Anthony Fok <foka@debian.org>
+- added zh_CN po file
 
-* Thu Jul 13 2000 Prospector <bugzilla@redhat.com>
-- automatic rebuild
+* Thu Mar 16 2000 Chih-Wei Huang <cwhuang@linux.org.tw>
+- update 1.4.1
 
-* Mon Jun 19 2000 Havoc Pennington <hp@redhat.com>
-- Install HTML docs
-
-* Fri Jun 16 2000 Preston Brown <pbrown@redhat.com>
-- fix desktop entry
-
-* Fri May 19 2000 Havoc Pennington <hp@redhat.com>
-- rebuild for the Winston tree, update to 1.4.2
+* Sat Feb 26 2000 Andrew Lee <andrew@cle.linux.org.tw>
+- add zh_TW.po
