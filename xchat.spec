@@ -1,32 +1,38 @@
-%define Build_7x	0
+# Nobody likely uses this so we disable it
+%define with_tclplugin 0
 
-Summary: A popular and easy to use graphical IRC (chat) client
-Name: xchat
-Version: 1.8.11
-Release: 9
-Epoch: 1
-Group: Applications/Internet
-License: GPL
-URL: http://www.xchat.org
-Source: http://www.xchat.org/files/source/1.8/xchat-%{version}.tar.bz2
-Source1: xchat.desktop
+Summary:   A popular and easy to use graphical IRC (chat) client
+Name:      xchat
+Version:   2.0.4
+Release:   4
+Epoch:     1
+Group:     Applications/Internet
+License:   GPL
+URL:       http://www.xchat.org
+Source:    http://www.xchat.org/files/source/2.0/xchat-%{version}.tar.bz2
 Buildroot: %{_tmppath}/%{name}-%{version}-root
 
-Patch4: xchat-1.8.1-konqueror.patch
-Patch5: xchat-1.8.4-fix-USE_GNOME.patch
-Patch6: xchat-1.8.7-use-sysconf-to-detect-cpus.patch
-Patch7: xchat-1.8.9-perlcrypt.patch
-Patch8: xchat-1.8.9-korean-fontset.patch
-Patch13: xchat-multilib.patch
-Patch14: xc1811fixststint.diff
-Patch15: xchat-1.8.11-freenode.patch
-Patch16: xc208-fixsocks5.diff
+# Patches 0-10 reserved for official xchat.org patches
+Patch0: http://www.xchat.org/files/source/2.0/patches/xc204-fixperlui.diff
 
-BuildRequires: gnome-libs perl python-devel autoconf openssl-devel pkgconfig
+Patch10: xchat-2.0.4-redhat-desktop-file.patch
+Patch11: xchat-2.0.4-screen-position-fix.patch
+Patch12: xchat-1.8.7-use-sysconf-to-detect-cpus.patch
+Patch13: xchat-2.0.4-exec-shield-GNU-stack.patch
+# Adds new xchat command /NICKALL to change your nick on all servers at once
+Patch18: xchat-1.8.11-nickall.patch
+Patch19: xchat-2.0.2-freenode.patch
+
+BuildRequires: perl python-devel openssl-devel pkgconfig
+BuildRequires: autoconf >= 2.54
+# Added for bugzilla bug #91676 - ./configure indicates these versions or
+# greater are required. 
+BuildRequires: glib2-devel >= 2.0.3, gtk2-devel >= 2.0.3, bison >= 1.35
+BuildRequires: gettext /bin/sed
 
 # xchat MUST have the version of perl installed which was used to compile
 # it, or else the embeded perl interpreter will break.
-Requires: perl = %(rpm -q --qf '%%{version}\n' perl)
+Requires: %(perl -le 'use Config; print $Config{archlibexp}')
 
 %description
 X-Chat is an easy to use graphical IRC chat client for the X Window
@@ -35,14 +41,14 @@ System.
 %prep
 %setup -q
 
-%patch5 -p0 -b .fix-USE_GNOME
-%patch6 -p0 -b .use-sysconf-to-detect-cpus
-%patch7 -p1 -b .perlcrypt
-%patch8 -p0 -b .korean-fontset
-%patch13 -p1 -b .multilib
-%patch14 -p1 -b .fixststint
-%patch15 -p1 -b .freenode
-%patch16 -p1 -b .fixsocks5
+%patch0 -p1 -b .fixperlui
+%patch10 -p0 -b .redhat-desktop-file
+%patch11 -p1 -b .screen-position-fix
+%patch12 -p0 -b .use-sysconf-to-detect-cpus
+%patch13 -p1 -b .exec-shield-GNU-stack
+# Disabled as it doesnt apply, needs investigation, and possible porting
+#%patch18 -p1 -b .nickall
+%patch19 -p0 -b .freenode
 
 autoconf
 
@@ -50,8 +56,9 @@ autoconf
 # Remove CVS files from source dirs so they're not installed into doc dirs.
 find . -name CVS -type d | xargs rm -rf
 
-export CFLAGS=$(perl -MExtUtils::Embed -e ccopts)
+export CFLAGS="$RPM_OPT_FLAGS $(perl -MExtUtils::Embed -e ccopts)"
 export LDFLAGS=$(perl -MExtUtils::Embed -e ldopts)
+
 if pkg-config openssl ; then
 	export CFLAGS="$CFLAGS `pkg-config --cflags openssl`"
 	export CPPFLAGS="$CPPFLAGS `pkg-config --cflags-only-I openssl`"
@@ -59,9 +66,13 @@ if pkg-config openssl ; then
 fi
 %configure --disable-panel \
            --disable-textfe \
-           --enable-japanese-conv \
            --enable-openssl \
            --enable-python \
+%if %{with_tclplugin}
+	   --enable-tcl \
+%else
+	   --disable-tcl \
+%endif	   
            --enable-ipv6
 
 make %{?_smp_mflags}
@@ -70,33 +81,121 @@ make %{?_smp_mflags}
 rm -rf $RPM_BUILD_ROOT
 %makeinstall
 
+# Move plugins around
+mkdir -p $RPM_BUILD_ROOT%{_libdir}/xchat/plugins
+mv $RPM_BUILD_ROOT%{_libdir}/perl.so $RPM_BUILD_ROOT%{_libdir}/xchat/plugins/
+mv $RPM_BUILD_ROOT%{_libdir}/python.so $RPM_BUILD_ROOT%{_libdir}/xchat/plugins/
+%if %{with_tclplugin}
+mv $RPM_BUILD_ROOT%{_libdir}/tcl.so $RPM_BUILD_ROOT%{_libdir}/xchat/plugins/
+%else
+rm -f $RPM_BUILD_ROOT%{_libdir}/tcl.so
+%endif	   
 
-# New style desktop config file
-%if ! %{Build_7x}
-mkdir -p $RPM_BUILD_ROOT/%{_datadir}/applications
-install -m 644 %{SOURCE1} $RPM_BUILD_ROOT/%{_datadir}/applications/net-xchat.desktop
-rm -f $RPM_BUILD_ROOT/etc/X11/applnk/Internet/xchat.desktop
-%endif
+# Remove unwanted stuff
+rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
+#rm -f $RPM_BUILD_ROOT%{_datadir}/applications/xchat.desktop
+#rm -f $RPM_BUILD_ROOT/etc/X11/applnk/Internet/xchat.desktop
 
 %find_lang %name
 
 %files -f %{name}.lang
 %defattr(-,root,root)
-%doc README ChangeLog doc/xchat.sgml doc/*.html scripts-python scripts-perl
+%doc README ChangeLog
 %{_bindir}/xchat
-%if ! %{Build_7x}
-%{_datadir}/applications/net-xchat.desktop
-%else
-%{_sysconfdir}/X11/applnk/Internet/xchat.desktop
-%endif
+%{_libdir}/xchat/plugins/*.so
+#%{_datadir}/applications/net-xchat.desktop
+%{_datadir}/applications/xchat.desktop
 %{_datadir}/pixmaps/*
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
-* Thu Apr 22 2004 Daniel Reed <djr@redhat.com> 1.8.11-8
-- Add bugfix from xchat.org xc208-fixsocks5.diff
+* Fri Oct 24 2003 Mike A. Harris <mharris@redhat.com> 2.0.4-4
+- Added xchat-2.0.4-exec-shield-GNU-stack.patch from Arjan, to allow xchat to
+  be be protected by exec shield if the system has exec-shield enabled.
+
+* Fri Sep 19 2003 Mike A. Harris <mharris@redhat.com> 2.0.4-3.EL
+- Rebuilt 2.0.4-3 for Taroon as 2.0.4-3.EL
+
+* Fri Sep 19 2003 Mike A. Harris <mharris@redhat.com> 2.0.4-3
+- Added xchat-2.0.4-screen-position-fix.patch to fix problem where xchat
+  doesn't remember it's screen location between invocations (#103896)
+
+* Sat Aug 30 2003 Mike A. Harris <mharris@redhat.com> 2.0.4-2
+- Updated xchat-2.0.4-redhat-desktop-file.patch
+
+* Thu Aug 28 2003 Mike A. Harris <mharris@redhat.com> 2.0.4-1
+- Updated to xchat 2.0.4
+- Removed unneeded patches xc203-fixtint.diff, xc203-fix-cps.diff
+- Added upstream patch xc204-fixperlui.diff
+- Updated autoconf dependancy to version 2.54 and greater as xchat wont
+  compile otherwise.  Meaning Red Hat Linux 9 or higher is needed.
+
+* Tue Jul 22 2003 Nalin Dahyabhai <nalin@redhat.com> 2.0.3-4
+- rebuild
+
+* Mon Jul 14 2003 Chip Turner <cturner@redhat.com>
+- rebuild for new perl 5.8.1
+
+* Thu Jul 10 2003 Mike A. Harris <mharris@redhat.com> 2.0.3-2
+- Added xc203-fix-cps.diff patch from upstream to fix cps calculation
+- TCL plugin was getting built even though we don't want it, so now we pass
+  --enable-tcl or --disable-tcl explicitly, depending on with_tclplugin macro
+
+* Mon Jun 30 2003 Mike A. Harris <mharris@redhat.com> 2.0.3-1.EL
+- Rebuilt 2.0.3-1 as 2.0.3-1.EL for Red Hat Enterprise Linux development
+
+* Mon Jun 30 2003 Mike A. Harris <mharris@redhat.com> 2.0.3-1
+- Updated to xchat 2.0.3
+- Dropped old patches: xc202-fixdetach.diff, xc202-fixurlg.diff,
+  xchat-2.0.2-lib64-cleanup-for-python.patch
+- Added upstream patch: xc203-fixtint.diff
+
+* Wed Jun 04 2003 Elliot Lee <sopwith@redhat.com>
+- rebuilt
+
+* Thu May 29 2003 Mike A. Harris <mharris@redhat.com> 2.0.2-7
+- Added back BuildRequires autoconf, and call autoconf prior to ./configure
+  as it seems to make xchat build successfully.  Have not bothered to figure
+  out why calling autoconf is needed.  Something for a rainy day.
+
+* Thu May 29 2003 Mike A. Harris <mharris@redhat.com> 2.0.2-6
+- Removed gnome-libs BuildRequires as it is bogus now
+- Removed autoconf BuildRequires and usage, as it should be unneeded
+- Added new BuildRequires on gettext, bison >= 1.35, glib2-devel >= 2.0.3,
+  gtk2-devel >= 2.0.3, /bin/sed  (#91676 - Warren Togami)
+- Removed dead patches: xchat-1.8.9-perlcrypt.patch, xchat-1.8.9-korean-fontset.patch
+
+* Wed May 21 2003 Mike A. Harris <mharris@redhat.com> 2.0.2-5
+- Removed xchat.desktop file, as it was earlier replacedwith a patch
+- Converted xchat-2.0.2-redhat-desktop-file.patch to be UTF-8 clean now,
+  instead of the various random legacy mix of encodings it was, updating
+  the following: es, ko, uk, zh_TW
+
+* Tue May 20 2003 Mike A. Harris <mharris@redhat.com> 2.0.2-4
+- Replace explicit perl package name-epoch-version Requires added in 2.0.2-3
+  with a more robust and generic solution of querying perl for the archlibexp
+  dir during building, and requiring it instead
+
+* Tue May 20 2003 Bill Nottingham <notting@redhat.com> 2.0.2-3
+- rebuild against new (old?) perl, add epoch to dependency
+
+* Sat May 17 2003 Mike A. Harris <mharris@redhat.com> 2.0.2-1
+- Updated to new xchat 2.0.2 based on GTK2
+- Dropped unneeded patches xchat-1.8.1-konqueror.patch,
+  xchat-1.8.4-fix-USE_GNOME.patch
+- Updated xchat-2.0.2-freenode.patch to refer to Openprojects.net
+- Removed doc/xchat.sgml doc/*.html scripts-python scripts-perl from %%doc
+- Added xchat-2.0.2-redhat-desktop-file.patch to patch the supplied xchat
+  desktop file, instead of replacing it and trying to stay in sync
+- Added xchat-2.0.2-lib64-cleanup-for-python.patch which fixes build problems
+  on lib64 archs, and replaces xchat-multilib.patch
+- Added with_tclplugin macro and default it to disabled
+
+* Mon Mar 17 2003 Mike A. Harris <mharris@redhat.com> 1.8.11-8
+- Added xchat-1.8.11-nickall.patch which was written by Fabio Olive Leite,
+  sent to me by Rik van Riel
 
 * Wed Feb 19 2003 Bill Nottingham <notting@redhat.com> 1.8.11-7
 - ship single desktop in %{_datadir}/applications, not /etc/X11/applnk

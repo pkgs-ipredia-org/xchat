@@ -1,0 +1,11 @@
+--- src/common/servlist.c.freenode	2003-05-17 17:49:47.000000000 -0400
++++ src/common/servlist.c	2003-05-17 17:50:00.000000000 -0400
+@@ -173,7 +173,7 @@
+ 	{0,			"irc.ggn.net"},
+ 	{0,			"irc.vendetta.com"},
+ 
+-	{"FreeNode",	0},
++	{"FreeNode (formerly OpenProjects.net)",	0},
+ 	{0,				"irc.freenode.net"},
+ 	{0,				"irc.eu.freenode.net"},
+ 	{0,				"irc.au.freenode.net"},
