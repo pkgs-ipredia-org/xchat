@@ -1,7 +1,7 @@
 Summary: A GTK+ IRC (chat) client.
 Name: xchat
 Version: 1.6.3
-Release: 4
+Release: 5
 Epoch: 1
 Group: Applications/Internet
 License: GPL
@@ -11,7 +11,8 @@ Buildroot: %{_tmppath}/%{name}-%{version}-root
 Patch0: xchat-1.6.3-autoconnect.patch
 Patch1: xchat-1.6.3-japanese.patch
 Patch2: xchat-1.6.3-jp2.patch
-Patch3: /usr/src/redhat/SOURCES/xchat-1.6.3-localeh.patch
+Patch3: xchat-1.6.3-localeh.patch
+Patch4: xchat-1.6.3-konqueror.patch
 
 %description
 X-Chat is yet another IRC client for the X Window System and
@@ -27,6 +28,7 @@ Install xchat if you need an IRC client for X.
 %patch1 -p1 -b .japanese
 %patch2 -p1 -b .jp2
 %patch3 -p1 -b .localeh
+%patch4 -p1 -b .konq
 
 %build
 %configure --disable-panel --disable-textfe --enable-japanese-conv
@@ -49,6 +51,9 @@ if [ -d $RPM_BUILD_ROOT ]; then rm -r $RPM_BUILD_ROOT; fi
 rm -r $RPM_BUILD_ROOT
 
 %changelog
+* Mon Jun 25 2001 Karsten Hopp <karsten@redhat.de>
+- use konqueror, not kfmclient on URLs
+
 * Fri Feb 23 2001 Trond Eivind Glomsrød <teg@redhat.com>
 - langify
 - use %%{_tmppath}
