@@ -49,7 +49,7 @@ System.
 %else
 %patch23 -p1 -b .simplify-to-use-htmlview-for-default-webbrowser
 %endif
-%patch30 -p0 -b .multiline-messages
+%patch30 -p1 -b .multiline-messages
 
 
 %build
