@@ -1,10 +1,12 @@
 # Nobody likely uses this so we disable it
-%define with_tclplugin 0
+%define with_tclplugin		0
+# This calls autoconf prior 
+%define require_autoconf	0
 
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
-Version:   2.0.4
-Release:   4
+Version:   2.0.7
+Release:   1.FC1.0
 Epoch:     1
 Group:     Applications/Internet
 License:   GPL
@@ -13,18 +15,18 @@ Source:    http://www.xchat.org/files/source/2.0/xchat-%{version}.tar.bz2
 Buildroot: %{_tmppath}/%{name}-%{version}-root
 
 # Patches 0-10 reserved for official xchat.org patches
-Patch0: http://www.xchat.org/files/source/2.0/patches/xc204-fixperlui.diff
+#Patch0: http://www.xchat.org/files/source/2.0/patches/xc204-fixperlui.diff
 
 Patch10: xchat-2.0.4-redhat-desktop-file.patch
-Patch11: xchat-2.0.4-screen-position-fix.patch
 Patch12: xchat-1.8.7-use-sysconf-to-detect-cpus.patch
-Patch13: xchat-2.0.4-exec-shield-GNU-stack.patch
 # Adds new xchat command /NICKALL to change your nick on all servers at once
 Patch18: xchat-1.8.11-nickall.patch
 Patch19: xchat-2.0.2-freenode.patch
 
 BuildRequires: perl python-devel openssl-devel pkgconfig
+%if %{require_autoconf}
 BuildRequires: autoconf >= 2.54
+%endif
 # Added for bugzilla bug #91676 - ./configure indicates these versions or
 # greater are required. 
 BuildRequires: glib2-devel >= 2.0.3, gtk2-devel >= 2.0.3, bison >= 1.35
@@ -41,16 +43,13 @@ System.
 %prep
 %setup -q
 
-%patch0 -p1 -b .fixperlui
+#%patch0 -p1 -b .fixperlui
 %patch10 -p0 -b .redhat-desktop-file
-%patch11 -p1 -b .screen-position-fix
 %patch12 -p0 -b .use-sysconf-to-detect-cpus
-%patch13 -p1 -b .exec-shield-GNU-stack
 # Disabled as it doesnt apply, needs investigation, and possible porting
 #%patch18 -p1 -b .nickall
 %patch19 -p0 -b .freenode
 
-autoconf
 
 %build
 # Remove CVS files from source dirs so they're not installed into doc dirs.
@@ -64,6 +63,11 @@ if pkg-config openssl ; then
 	export CPPFLAGS="$CPPFLAGS `pkg-config --cflags-only-I openssl`"
 	export LDFLAGS="$LDFLAGS `pkg-config --libs-only-L openssl`"
 fi
+
+if [ %{require_autoconf} -eq 1 ] ; then
+	autoconf
+fi
+
 %configure --disable-panel \
            --disable-textfe \
            --enable-openssl \
@@ -111,6 +115,24 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Tue Feb 17 2004 Mike A. Harris <mharris@redhat.com> 1:2.0.7-1.FC1.0
+- Rebuild xchat 2.0.7-3 as 2.0.7-1.FC1.0 for release as an enhancement erratum
+  for Fedora Core 1.  Also fixes AMD64 64bit issues reported in bug (#114237)
+
+* Fri Feb 13 2004 Elliot Lee <sopwith@redhat.com> 1:2.0.7-3
+- rebuilt
+
+* Mon Jan 26 2004 Jeremy Katz <katzj@redhat.com> 1:2.0.7-2
+- rebuild for new perl version
+
+* Sat Jan 10 2004 Mike A. Harris <mharris@redhat.com> 1:2.0.7-1
+- Updated to xchat 2.0.7
+- Removed already integrated patches, including:  xc204-fixperlui.diff,
+  xchat-2.0.4-screen-position-fix.patch, xchat-2.0.4-exec-shield-GNU-stack.patch
+- Added a new rpm macro require_autoconf, which is disabled (0) by default, as
+  it seems no longer necessary to run autoconf prior to ./configure, so we no
+  longer need to BuildRequire autoconf 2.54 either.
+
 * Fri Oct 24 2003 Mike A. Harris <mharris@redhat.com> 2.0.4-4
 - Added xchat-2.0.4-exec-shield-GNU-stack.patch from Arjan, to allow xchat to
   be be protected by exec shield if the system has exec-shield enabled.
