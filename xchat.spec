@@ -3,7 +3,7 @@
 Summary: A popular and easy to use graphical IRC (chat) client
 Name: xchat
 Version: 1.8.11
-Release: 7
+Release: 9
 Epoch: 1
 Group: Applications/Internet
 License: GPL
@@ -20,6 +20,7 @@ Patch8: xchat-1.8.9-korean-fontset.patch
 Patch13: xchat-multilib.patch
 Patch14: xc1811fixststint.diff
 Patch15: xchat-1.8.11-freenode.patch
+Patch16: xc208-fixsocks5.diff
 
 BuildRequires: gnome-libs perl python-devel autoconf openssl-devel pkgconfig
 
@@ -41,6 +42,7 @@ System.
 %patch13 -p1 -b .multilib
 %patch14 -p1 -b .fixststint
 %patch15 -p1 -b .freenode
+%patch16 -p1 -b .fixsocks5
 
 autoconf
 
@@ -93,6 +95,9 @@ rm -f $RPM_BUILD_ROOT/etc/X11/applnk/Internet/xchat.desktop
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Thu Apr 22 2004 Daniel Reed <djr@redhat.com> 1.8.11-8
+- Add bugfix from xchat.org xc208-fixsocks5.diff
+
 * Wed Feb 19 2003 Bill Nottingham <notting@redhat.com> 1.8.11-7
 - ship single desktop in %{_datadir}/applications, not /etc/X11/applnk
 
