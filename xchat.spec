@@ -1,33 +1,48 @@
+%define Build_7x	0
+
 Summary: A GTK+ IRC (chat) client.
 Name: xchat
-Version: 1.8.9
-Release: 1.73.0
+Version: 1.8.10
+Release: 5
 Epoch: 1
 Group: Applications/Internet
 License: GPL
 URL: http://www.xchat.org
 Source: http://www.xchat.org/files/source/1.8/xchat-%{version}.tar.bz2
+Source1: xchat.desktop
 Buildroot: %{_tmppath}/%{name}-%{version}-root
 
 Patch4: xchat-1.8.1-konqueror.patch
 Patch5: xchat-1.8.4-fix-USE_GNOME.patch
 Patch6: xchat-1.8.7-use-sysconf-to-detect-cpus.patch
+Patch7: xchat-1.8.9-perlcrypt.patch
+Patch8: xchat-1.8.9-korean-fontset.patch
+Patch9: xc1810fixme.diff
 
-BuildRequires: gnome-libs
+BuildRequires: gnome-libs perl
 
 %description
-X-Chat is an IRC client for the X Window System and GTK+. X-Chat is
-fairly easy to use and includes a nice interface.
+X-Chat is a graphical IRC chat client for the X Window System. X-Chat is
+fairly easy to use and includes a nice GNOME/GTK+ based user interface.
 
 %prep
 %setup -q
 
 %patch5 -p0 -b .fix-USE_GNOME
 %patch6 -p0 -b .use-sysconf-to-detect-cpus
+%patch7 -p1 -b .perlcrypt
+%patch8 -p0 -b .korean-fontset
+%patch9 -p0 -b .xc1810fixme
 
 %build
-%configure --disable-panel --disable-textfe --enable-japanese-conv \
-           --enable-openssl --enable-ipv6
+export CFLAGS=$(perl -MExtUtils::Embed -e ccopts)
+export LDFLAGS=$(perl -MExtUtils::Embed -e ldopts)
+%configure --disable-panel \
+           --disable-textfe \
+           --enable-japanese-conv \
+           --enable-openssl \
+           --enable-python \
+           --enable-ipv6
 
 make
 
@@ -39,14 +54,24 @@ rm -rf $RPM_BUILD_ROOT
 #install -m 644 xchat.desktop $RPM_BUILD_ROOT%{_sysconfdir}/X11/applnk/Internet
 #install -m 644 xchat.png $RPM_BUILD_ROOT%{_datadir}/pixmaps
 
+# New style desktop config file
+%if ! %{Build_7x}
+mkdir -p $RPM_BUILD_ROOT/%{_datadir}/applications
+install -m 644 %{SOURCE1} $RPM_BUILD_ROOT/%{_datadir}/applications/net-xchat.desktop
+%endif
+
+
 %find_lang %name
 
 %files -f %{name}.lang
 %defattr(-,root,root)
 %doc README ChangeLog doc/xchat.sgml doc/*.html scripts-python scripts-perl
 %{_bindir}/xchat
-#%if %{WithoutGNOME}
+%if %{Build_7x}
 %{_sysconfdir}/X11/applnk/Internet/xchat.desktop
+%else
+%{_datadir}/applications/net-xchat.desktop
+%endif
 #%else
 #%{_datadir}/gnome/apps/Internet/xchat.desktop
 #%endif
@@ -56,10 +81,39 @@ rm -rf $RPM_BUILD_ROOT
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Wed Aug 14 2002 Jonathan Blandford <jrb@redhat.com>
+- actually install the desktop file.
+
+* Fri Aug  9 2002 Mike A. Harris <mharris@redhat.com> 1.8.10-3
+- Added http://xchat.org/files/source/1.8/patches/xc1810fixme.diff to fix
+  bug with using /ME in a /QUERY window.  (#71179)
+
+* Wed Aug  7 2002 Mike A. Harris <mharris@redhat.com> 1.8.10-2
+- Updated to xchat 1.8.10 to fix a few bugs where a remote ircd could cause
+  the xchat client to crash.  This is a bugfix only release.
+
+* Tue Aug  6 2002 Mike A. Harris <mharris@redhat.com> 1.8.9-10
+- Added Korean fontset support to fix bug (#69771)
+
+* Mon Aug  5 2002 Mike A. Harris <mharris@redhat.com> 1.8.9-9
+- Enabled python scripting which was somehow disabled somewhere along the
+  line by default in upstream sources, and we missed catching it. (#70816)
+
+* Sun Aug  4 2002 Mike A. Harris <mharris@redhat.com> 1.8.9-8
+- Created new-style net-xchat.desktop file (#69541)
+
+* Fri Jun 21 2002 Tim Powers <timp@redhat.com> 1.8.9-7
+- automated rebuild
+
+* Tue Jun 18 2002 Mike A. Harris <mharris@redhat.com> 1.8.9-6
+- updated the package description
+- Added CFLAGS and LDFLAGS export vars before configure to fix rpath problem
+
+* Sun May 26 2002 Tim Powers <timp@redhat.com>
+- automated rebuild
+
 * Mon May 20 2002 Mike A. Harris <mharris@redhat.com> 1.8.9-2
 - Updated to xchat 1.8.9
-- Built security erratum for RHL 7.3, 7.2, 7.1, 7.0, 6.2 for DNS issue
-  reported at http://online.securityfocus.com/bid/4376/info/
 
 * Mon Apr  8 2002 Mike A. Harris <mharris@redhat.com> 1.8.8-5
 - Re-enabled GNOME support due to user complaints of pixmaps missing, key
