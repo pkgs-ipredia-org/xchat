@@ -1,18 +1,21 @@
+%define WithoutGNOME 1
+
 Summary: A GTK+ IRC (chat) client.
 Name: xchat
-Version: 1.8.7
-Release: 1.72.0
+Version: 1.8.8
+Release: 4
 Epoch: 1
 Group: Applications/Internet
 License: GPL
-Url: http://xchat.org
-Source: http://xchat.org/files/source/1.4/xchat-%{version}.tar.bz2
+URL: http://www.xchat.org
+Source: http://www.xchat.org/files/source/1.8/xchat-%{version}.tar.bz2
 Buildroot: %{_tmppath}/%{name}-%{version}-root
 
 Patch4: xchat-1.8.1-konqueror.patch
 Patch5: xchat-1.8.4-fix-USE_GNOME.patch
+Patch6: xchat-1.8.7-use-sysconf-to-detect-cpus.patch
 
-BuildRequires: gnome-libs
+%{?!WithoutGNOME:BuildRequires: gnome-libs}
 
 %description
 X-Chat is an IRC client for the X Window System and GTK+. X-Chat is
@@ -22,14 +25,22 @@ fairly easy to use and includes a nice interface.
 %setup -q
 
 %patch5 -p0 -b .fix-USE_GNOME
+%patch6 -p0 -b .use-sysconf-to-detect-cpus
 
 %build
-%configure --disable-panel --disable-textfe --enable-japanese-conv --enable-openssl
+%configure --disable-panel --disable-textfe --enable-japanese-conv \
+           --enable-openssl --enable-ipv6 %{?WithoutGNOME:--disable-gnome}
+
 make
 
 %install
 rm -rf $RPM_BUILD_ROOT
 %makeinstall
+%if %{WithoutGNOME}
+mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/X11/applnk/Internet $RPM_BUILD_ROOT%{_datadir}/pixmaps
+install -m 644 xchat.desktop $RPM_BUILD_ROOT%{_sysconfdir}/X11/applnk/Internet
+install -m 644 xchat.png $RPM_BUILD_ROOT%{_datadir}/pixmaps
+%endif
 
 %find_lang %name
 
@@ -37,14 +48,35 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 %doc README ChangeLog doc/xchat.sgml doc/*.html scripts-python scripts-perl
 %{_bindir}/xchat
-%{_datadir}/gnome/apps/Internet/xchat.desktop
+%{_sysconfdir}/X11/applnk/Internet/xchat.desktop
 %{_datadir}/pixmaps/*
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
-* Thu Jan 10 2002 Mike A. Harris <mharris@redhat.com> 1.8.7-0.1
+* Tue Mar 27 2002 Mike A. Harris <mharris@redhat.com> 1.8.8-3
+- Disabled GNOME support since it doesn't seem too useful anyways, and forces
+  all xchat users to install GNOME libs even if they use KDE. (#59626)
+- Updated URL and source lines in spec.
+
+* Wed Mar  6 2002 Mike A. Harris <mharris@redhat.com> 1.8.8-1
+- Updated to xchat 1.8.8
+
+* Tue Feb 26 2002 Mike A. Harris <mharris@redhat.com> 1.8.7-6
+- Built in new buildroot
+
+* Tue Feb  5 2002 Mike A. Harris <mharris@redhat.com> 1.8.7-5
+- Added xchat-1.8.7-use-sysconf-to-detect-cpus.patch to use glibc's sysconf()
+  to detect the number of processors available.
+
+* Mon Feb  4 2002 Mike A. Harris <mharris@redhat.com> 1.8.7-4
+- Enabled IPv6 support as per the request for enhancement (#52124)
+
+* Thu Jan 24 2002 Mike A. Harris <mharris@redhat.com> 1.8.7-3
+- Rebuilt in new build environment
+
+* Thu Jan 10 2002 Mike A. Harris <mharris@redhat.com> 1.8.7-2
 - Updated to xchat 1.8.7
 - New release fixes security vulnerability in CTCP reply
 - Built erratum for all supported releases (1.8.7-1.62.0, 1.8.7-1.70.0,
