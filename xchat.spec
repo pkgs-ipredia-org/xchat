@@ -4,13 +4,11 @@
 
 # Nobody likely uses this so we disable it
 %define with_tclplugin		0
-# This calls autoconf prior 
-%define require_autoconf	0
 
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.0.7
-Release:   5
+Release: 6
 Epoch:     1
 Group:     Applications/Internet
 License:   GPL
@@ -28,9 +26,6 @@ Patch20: xchat-2.0.7-simplify-to-use-gnome-open-for-default-webbrowser.patch
 Patch21: xchat-2.0.7-simplify-to-use-htmlview-for-default-webbrowser.patch
 
 BuildRequires: perl python-devel openssl-devel pkgconfig
-%if %{require_autoconf}
-BuildRequires: autoconf >= 2.54
-%endif
 # Added for bugzilla bug #91676 - ./configure indicates these versions or
 # greater are required. 
 BuildRequires: glib2-devel >= 2.0.3, gtk2-devel >= 2.0.3, bison >= 1.35
@@ -122,8 +117,12 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Tue Jun 15 2004 Elliot Lee <sopwith@redhat.com>
+- rebuilt
+
 * Tue Mar  9 2004 Mike A. Harris <mharris@redhat.com> 1:2.0.7-5
 - Bump and rebuild for Fedora devel, to sync up with new perl
+- Remove require_autoconf conditional, and conditionalized autoconf BuildRequires
 
 * Fri Mar  5 2004 Mike A. Harris <mharris@redhat.com> 1:2.0.7-4
 - Added xchat-2.0.7-simplify-to-use-gnome-open-for-default-webbrowser.patch
