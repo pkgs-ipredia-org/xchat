@@ -7,8 +7,8 @@
 
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
-Version:   2.0.7
-Release: 6
+Version:   2.0.9
+Release:   1
 Epoch:     1
 Group:     Applications/Internet
 License:   GPL
@@ -22,8 +22,8 @@ Buildroot: %{_tmppath}/%{name}-%{version}-root
 Patch10: xchat-2.0.4-redhat-desktop-file.patch
 Patch12: xchat-1.8.7-use-sysconf-to-detect-cpus.patch
 Patch19: xchat-2.0.2-freenode.patch
-Patch20: xchat-2.0.7-simplify-to-use-gnome-open-for-default-webbrowser.patch
-Patch21: xchat-2.0.7-simplify-to-use-htmlview-for-default-webbrowser.patch
+Patch22: xchat-2.0.9-simplify-to-use-gnome-open-for-default-webbrowser.patch
+Patch23: xchat-2.0.9-simplify-to-use-htmlview-for-default-webbrowser.patch
 
 BuildRequires: perl python-devel openssl-devel pkgconfig
 # Added for bugzilla bug #91676 - ./configure indicates these versions or
@@ -47,9 +47,9 @@ System.
 %patch12 -p0 -b .use-sysconf-to-detect-cpus
 %patch19 -p0 -b .freenode
 %if %{build_fc2}
-%patch20 -p0 -b .simplify-to-use-gnome-open-for-default-webbrowser
+%patch22 -p1 -b .simplify-to-use-gnome-open-for-default-webbrowser
 %else
-%patch21 -p0 -b .simplify-to-use-htmlview-for-default-webbrowser
+%patch23 -p1 -b .simplify-to-use-htmlview-for-default-webbrowser
 %endif
 
 
@@ -117,6 +117,10 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Wed Jun 23 2004 Christopher Aillon <caillon@redhat.com> 1:2.0.9-1
+- Update to 2.0.9
+- Fixed the URL handler menu patches to apply.
+
 * Tue Jun 15 2004 Elliot Lee <sopwith@redhat.com>
 - rebuilt
 
