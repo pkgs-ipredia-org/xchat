@@ -1,38 +1,34 @@
 Summary: A GTK+ IRC (chat) client.
 Name: xchat
-Version: 1.8.1
-Release: 2
+Version: 1.8.7
+Release: 1.72.0
 Epoch: 1
 Group: Applications/Internet
 License: GPL
 Url: http://xchat.org
-Source: http://xchat.org/files/source/1.4/xchat-%{version}.tar.gz
+Source: http://xchat.org/files/source/1.4/xchat-%{version}.tar.bz2
 Buildroot: %{_tmppath}/%{name}-%{version}-root
 
 Patch4: xchat-1.8.1-konqueror.patch
-Patch5: xchat-1.8.1-kanjiconv-fix.patch
+Patch5: xchat-1.8.4-fix-USE_GNOME.patch
 
 BuildRequires: gnome-libs
 
 %description
-X-Chat is yet another IRC client for the X Window System and
-GTK+. X-Chat is fairly easy to use, compared to other GTK+ IRC
-clients, and the interface is quite nicely designed.
-
-Install xchat if you need an IRC client for X.
+X-Chat is an IRC client for the X Window System and GTK+. X-Chat is
+fairly easy to use and includes a nice interface.
 
 %prep
 %setup -q
 
-%patch4 -p1 -b .konqueror
-%patch5 -p1 -b .kanjiconv
+%patch5 -p0 -b .fix-USE_GNOME
 
 %build
-%configure --disable-panel --disable-textfe --enable-japanese-conv
+%configure --disable-panel --disable-textfe --enable-japanese-conv --enable-openssl
 make
 
 %install
-if [ -d $RPM_BUILD_ROOT ]; then rm -r $RPM_BUILD_ROOT; fi
+rm -rf $RPM_BUILD_ROOT
 %makeinstall
 
 %find_lang %name
@@ -45,9 +41,32 @@ if [ -d $RPM_BUILD_ROOT ]; then rm -r $RPM_BUILD_ROOT; fi
 %{_datadir}/pixmaps/*
 
 %clean
-rm -r $RPM_BUILD_ROOT
+rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Thu Jan 10 2002 Mike A. Harris <mharris@redhat.com> 1.8.7-0.1
+- Updated to xchat 1.8.7
+- New release fixes security vulnerability in CTCP reply
+- Built erratum for all supported releases (1.8.7-1.62.0, 1.8.7-1.70.0,
+  1.8.7-1.71.0, 1.8.7-1.72.0)
+- Removed konqueror patch as it is integrated now.
+
+* Sat Jan  5 2002 Mike A. Harris <mharris@redhat.com> 1.8.6-2
+- Enabled ssl support with --enable-openssl
+- Also built releases 1.72.0, 1.71.0, 1.70.0, 1.62.0 for erratum release
+
+* Mon Dec 10 2001 Mike A. Harris <mharris@redhat.com> 1.8.6-1
+- Updated to xchat 1.8.6
+
+* Tue Nov 13 2001 Mike A. Harris <mharris@redhat.com> 1.8.5-1
+- Updated to xchat 1.8.5
+- Added f to rm -r in install and clean sections
+
+* Sun Oct  7 2001 Mike A. Harris <mharris@redhat.com> 1.8.4-1
+- Updated to 1.8.4, now using tar.bz2
+- Removed kanjiconv-fix patch as it is integrated now
+- Added xchat-1.8.4-fix-USE_GNOME.patch to fix simple ifdef USE_GNOME typo
+
 * Fri Jul 13 2001 Akira TAGOH <tagoh@redhat.com> 1.8.1-2
 - fixed check locale.
 - don't save kanji_conv.
