@@ -3,7 +3,7 @@
 Summary: A GTK+ IRC (chat) client.
 Name: xchat
 Version: 1.8.10
-Release: 6
+Release: 8
 Epoch: 1
 Group: Applications/Internet
 License: GPL
@@ -22,6 +22,10 @@ Patch10: xc1810fixme2.diff
 Patch11: xchat-1.8.10-beep-beep-beep.patch
 
 BuildRequires: gnome-libs perl
+
+# xchat MUST have the version of perl installed which was used to compile
+# it, or else the embeded perl interpreter will break.
+Requires: perl = %(rpm -q --qf '%%{version}\n' perl)
 
 %description
 X-Chat is a graphical IRC chat client for the X Window System. X-Chat is
@@ -85,6 +89,11 @@ install -m 644 %{SOURCE1} $RPM_BUILD_ROOT/%{_datadir}/applications/net-xchat.des
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Fri Aug 23 2002 Mike A. Harris <mharris@redhat.com> 1.8.10-7
+- Added Requires line so that xchat requires the exact version of perl
+  be installed, that was used to compile it, since the embedded perl
+  interpreter will break, if you upgrade perl
+
 * Thu Aug 15 2002 Mike A. Harris <mharris@redhat.com> 1.8.10-6
 - Fix Bill's beep beep beep bug (#71651)
 
