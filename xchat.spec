@@ -7,8 +7,8 @@
 
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
-Version:   2.0.10
-Release:   3
+Version:   2.4.0
+Release:   1
 Epoch:     1
 Group:     Applications/Internet
 License:   GPL
@@ -16,9 +16,7 @@ URL:       http://www.xchat.org
 Source:    http://www.xchat.org/files/source/2.0/xchat-%{version}.tar.bz2
 Buildroot: %{_tmppath}/%{name}-%{version}-root
 
-# Patches 0-10 reserved for official xchat.org patches
-Patch0: http://www.xchat.org/files/source/2.0/patches/xc2010-fixfocus.diff
-Patch1: http://www.xchat.org/files/source/2.0/patches/xc2010-fixtabcomp2.diff
+# Patches 0-9 reserved for official xchat.org patches
 Patch10: xchat-2.0.4-redhat-desktop-file.patch
 Patch12: xchat-1.8.7-use-sysconf-to-detect-cpus.patch
 Patch19: xchat-2.0.2-freenode.patch
@@ -42,8 +40,6 @@ System.
 %prep
 %setup -q
 
-%patch0 -p1 -b .fixfocus
-%patch1 -p1 -b .fixtabcomp2
 %patch10 -p0 -b .redhat-desktop-file
 %patch12 -p0 -b .use-sysconf-to-detect-cpus
 %patch19 -p0 -b .freenode
@@ -118,6 +114,12 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Sun Aug 15 2004 Christopher Aillon <caillon@redhat.com> 1:2.4.0-1
+- Update to 2.4.0
+- Fix simplify-to-use-gnome-open and simplify-to-use-htmlview patches
+  to not conflict every time upstream modifies the urlhandler list.
+- Remove focus and tab completion patches (no longer needed)
+
 * Mon Jul 26 2004 Christopher Aillon <caillon@redhat.com> 1:2.0.10-3
 - Update upstream patch to fix tab completion crash
 - Add upstream patch to fix focus crash on some window managers.
