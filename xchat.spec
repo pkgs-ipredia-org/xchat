@@ -8,7 +8,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.4.2
-Release:   2
+Release:   3
 Epoch:     1
 Group:     Applications/Internet
 License:   GPL
@@ -113,6 +113,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Mon Mar 28 2005 Christopher Aillon <caillon@redhat.com> 1:2.4.2-3
+- Fix crash when right clicking users whose away msg is unknown.
+
 * Fri Mar 25 2005 Christopher Aillon <caillon@redhat.com> 1:2.4.2-2
 - Add user's away message to right click menu, if known
 
