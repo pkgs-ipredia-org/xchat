@@ -1,80 +1,88 @@
-%define name xchat
-%define version 1.6.1
-%define release 2tc1
-%define prefix /usr
-
-Summary: A GTK+ IRC (chat) client
-
-Name: %{name}
-Version: %{version}
-Release: %{release}
+Summary: A GTK+ IRC (chat) client.
+Name: xchat
+Version: 1.6.3
+Release: 4
 Epoch: 1
 Group: Applications/Internet
-Copyright: GPL
-Packager: Red Hat, Inc. <http://bugzilla.redhat.com/bugzilla>
-Vendor: Red Hat, Inc.
-
+License: GPL
 Url: http://xchat.org
-
-Source: http://xchat.org/files/source/1.6/xchat-%{version}.tar.gz
-Source1: xchat-zh_TW.po
-Source2: xchat-zh_CN.po
-Patch: xchat-1.6.1-mb.diff
-Buildroot: /var/tmp/%{name}-%{version}-%{release}-root
+Source: http://xchat.org/files/source/1.4/xchat-%{version}.tar.gz
+Buildroot: %{_tmppath}/%{name}-%{version}-root
+Patch0: xchat-1.6.3-autoconnect.patch
+Patch1: xchat-1.6.3-japanese.patch
+Patch2: xchat-1.6.3-jp2.patch
+Patch3: /usr/src/redhat/SOURCES/xchat-1.6.3-localeh.patch
 
 %description
 X-Chat is yet another IRC client for the X Window System and
 GTK+. X-Chat is fairly easy to use, compared to other GTK+ IRC
 clients, and the interface is quite nicely designed.
 
-%prep
+Install xchat if you need an IRC client for X.
 
-%setup
-%patch -p0 -b .mb
+%prep
+%setup -q
+
+%patch0 -p1 -b .autoconnect
+%patch1 -p1 -b .japanese
+%patch2 -p1 -b .jp2
+%patch3 -p1 -b .localeh
 
 %build
-#%configure --disable-panel --disable-textfe --enable-openssl
-CFLAGS="$RPM_OPT_FLAGS" ./configure --prefix=%{prefix} \
-	--disable-panel --disable-textfe --enable-openssl
+%configure --disable-panel --disable-textfe --enable-japanese-conv
 make
 
 %install
 if [ -d $RPM_BUILD_ROOT ]; then rm -r $RPM_BUILD_ROOT; fi
-mkdir -p $RPM_BUILD_ROOT%{prefix}
-make prefix=$RPM_BUILD_ROOT%{prefix} install-strip
+%makeinstall
 
-# install languages by hand
-mkdir -p $RPM_BUILD_ROOT/usr/share/locale/zh_TW/LC_MESSAGES
-msgfmt -o $RPM_BUILD_ROOT/usr/share/locale/zh_TW/LC_MESSAGES/xchat.mo %{SOURCE1}
-mkdir -p $RPM_BUILD_ROOT/usr/share/locale/zh_CN/LC_MESSAGES
-msgfmt -o $RPM_BUILD_ROOT/usr/share/locale/zh_CN/LC_MESSAGES/xchat.mo %{SOURCE2}
+%find_lang %name
 
-%files
+%files -f %{name}.lang
 %defattr(-,root,root)
-%doc README ChangeLog doc/xchat.sgml
-%attr(755,root,root) %{prefix}/bin/xchat
-%{prefix}/share/gnome/apps/Internet/xchat.desktop
-%{prefix}/share/pixmaps/xchat.png
-%{prefix}/share/locale/*/LC_MESSAGES/*
+%doc README ChangeLog doc/xchat.sgml doc/*.html
+%attr(755,root,root) /usr/bin/xchat
+/usr/share/gnome/apps/Internet/xchat.desktop
+/usr/share/pixmaps/xchat.png
 
 %clean
-[ -n "$RPM_BUILD_ROOT" -a "$RPM_BUILD_ROOT" != / ] && rm -rf $RPM_BUILD_ROOT
+rm -r $RPM_BUILD_ROOT
 
 %changelog
-* Fri Dec 8 2000 Chih-Wei Huang <cwhuang@linux.org.tw>
-- add Epoch to ensure upgrade safely from RH7
-- change zh_TW.Big5.po to zh_TW.po
-- add --enable-openssl
+* Fri Feb 23 2001 Trond Eivind Glomsrød <teg@redhat.com>
+- langify
+- use %%{_tmppath}
+- make it compile
 
-* Tue Dec 5 2000 Andrew Lee <andrew@linux.org.tw>
-- update to 1.6.1
-- new xchat-zh_TW.Big5.po
+* Tue Feb 13 2001 Akira TAGOH <tagoh@redhat.com>
+- Added Japanese patch.
 
-* Sat Sep 2 2000 Anthony Fok <foka@debian.org>
-- added zh_CN po file
+* Tue Feb 13 2001 Havoc Pennington <hp@redhat.com>
+- patch that may fix autoconnections (bug 27093)
 
-* Thu Mar 16 2000 Chih-Wei Huang <cwhuang@linux.org.tw>
-- update 1.4.1
+* Mon Jan 22 2001 Havoc Pennington <hp@redhat.com>
+- 1.6.3
+- remove patch to desktop file (Internet->Application), seems to 
+  have gone upstream
 
-* Sat Feb 26 2000 Andrew Lee <andrew@cle.linux.org.tw>
-- add zh_TW.po
+* Sat Dec 9 2000 Havoc Pennington <hp@redhat.com>
+- Remove security fix which has been merged upstream
+- upgrade to 1.6.1
+
+* Sat Aug 19 2000 Havoc Pennington <hp@redhat.com>
+- Don't use /bin/sh to interpret URLs from the net
+
+* Fri Aug 11 2000 Jonathan Blandford <jrb@redhat.com>
+- Updated Epoch
+
+* Thu Jul 13 2000 Prospector <bugzilla@redhat.com>
+- automatic rebuild
+
+* Mon Jun 19 2000 Havoc Pennington <hp@redhat.com>
+- Install HTML docs
+
+* Fri Jun 16 2000 Preston Brown <pbrown@redhat.com>
+- fix desktop entry
+
+* Fri May 19 2000 Havoc Pennington <hp@redhat.com>
+- rebuild for the Winston tree, update to 1.4.2
