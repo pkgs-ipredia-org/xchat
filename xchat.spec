@@ -8,7 +8,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.4.0
-Release:   2
+Release:   3
 Epoch:     1
 Group:     Applications/Internet
 License:   GPL
@@ -110,6 +110,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Mon Sep 20 2004 Daniel Reed <djr@redhat.com> 1:2.4.0-3
+- #132967 Remove GenericName
+
 * Tue Aug 17 2004 Daniel Reed <djr@redhat.com> 1:2.4.0-2
 - #125846 Change xchat.desktop names to "IRC"
 
