@@ -7,8 +7,8 @@
 
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
-Version:   2.4.2
-Release:   3
+Version:   2.4.3
+Release:   1
 Epoch:     1
 Group:     Applications/Internet
 License:   GPL
@@ -17,7 +17,7 @@ Source:    http://www.xchat.org/files/source/2.0/xchat-%{version}.tar.bz2
 Buildroot: %{_tmppath}/%{name}-%{version}-root
 
 # Patches 0-9 reserved for official xchat.org patches
-Patch10: xchat-2.0.4-redhat-desktop-file.patch
+Patch10: xchat-2.4.3-redhat-desktop.patch
 Patch12: xchat-1.8.7-use-sysconf-to-detect-cpus.patch
 Patch19: xchat-2.0.2-freenode.patch
 Patch22: xchat-2.0.9-simplify-to-use-gnome-open-for-default-webbrowser.patch
@@ -30,10 +30,8 @@ BuildRequires: perl python-devel openssl-devel pkgconfig
 # greater are required. 
 BuildRequires: glib2-devel >= 2.0.3, gtk2-devel >= 2.0.3, bison >= 1.35
 BuildRequires: gettext /bin/sed
-
-# xchat MUST have the version of perl installed which was used to compile
-# it, or else the embeded perl interpreter will break.
-Requires: %(perl -le 'use Config; print $Config{archlibexp}')
+# Ensure that a compatible libperl is installed
+Requires: perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %description
 X-Chat is an easy to use graphical IRC chat client for the X Window
@@ -113,6 +111,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Sun Apr 03 2005 Warren Togami <wtogami@redhat.com> 1:2.4.3-1
+- 2.4.3, use perl MODULE_COMPAT
+
 * Mon Mar 28 2005 Christopher Aillon <caillon@redhat.com> 1:2.4.2-3
 - Fix crash when right clicking users whose away msg is unknown.
 
