@@ -8,7 +8,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.4.0
-Release:   1
+Release:   2
 Epoch:     1
 Group:     Applications/Internet
 License:   GPL
@@ -40,7 +40,7 @@ System.
 %prep
 %setup -q
 
-%patch10 -p0 -b .redhat-desktop-file
+%patch10 -p1 -b .redhat-desktop-file
 %patch12 -p0 -b .use-sysconf-to-detect-cpus
 %patch19 -p0 -b .freenode
 %if %{build_fc2}
@@ -61,10 +61,6 @@ if pkg-config openssl ; then
 	export CFLAGS="$CFLAGS `pkg-config --cflags openssl`"
 	export CPPFLAGS="$CPPFLAGS `pkg-config --cflags-only-I openssl`"
 	export LDFLAGS="$LDFLAGS `pkg-config --libs-only-L openssl`"
-fi
-
-if [ %{require_autoconf} -eq 1 ] ; then
-	autoconf
 fi
 
 %configure --disable-panel \
@@ -114,6 +110,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Tue Aug 17 2004 Daniel Reed <djr@redhat.com> 1:2.4.0-2
+- #125846 Change xchat.desktop names to "IRC"
+
 * Sun Aug 15 2004 Christopher Aillon <caillon@redhat.com> 1:2.4.0-1
 - Update to 2.4.0
 - Fix simplify-to-use-gnome-open and simplify-to-use-htmlview patches
