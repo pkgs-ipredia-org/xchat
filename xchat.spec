@@ -8,7 +8,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.4.2
-Release:   1
+Release:   2
 Epoch:     1
 Group:     Applications/Internet
 License:   GPL
@@ -23,6 +23,7 @@ Patch19: xchat-2.0.2-freenode.patch
 Patch22: xchat-2.0.9-simplify-to-use-gnome-open-for-default-webbrowser.patch
 Patch23: xchat-2.0.9-simplify-to-use-htmlview-for-default-webbrowser.patch
 Patch30: xchat-2.4.2-multiline-messages.patch
+Patch31: xchat-2.4.2-nickmenu-away-msg.patch
 
 BuildRequires: perl python-devel openssl-devel pkgconfig
 # Added for bugzilla bug #91676 - ./configure indicates these versions or
@@ -50,7 +51,7 @@ System.
 %patch23 -p1 -b .simplify-to-use-htmlview-for-default-webbrowser
 %endif
 %patch30 -p1 -b .multiline-messages
-
+%patch31 -p0 -b .nickmenu-away-msg
 
 %build
 # Remove CVS files from source dirs so they're not installed into doc dirs.
@@ -112,6 +113,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Fri Mar 25 2005 Christopher Aillon <caillon@redhat.com> 1:2.4.2-2
+- Add user's away message to right click menu, if known
+
 * Thu Mar 17 2005 Christopher Aillon <caillon@redhat.com> 1:2.4.2-1
 - Update to 2.4.2
 
