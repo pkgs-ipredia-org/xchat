@@ -8,7 +8,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.4.1
-Release:   2
+Release:   3
 Epoch:     1
 Group:     Applications/Internet
 License:   GPL
@@ -112,6 +112,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Tue Jan 18 2005 Chip Turner <cturner@redhat.com> 1:2.4.1-3
+- rebuild for new perl
+
 * Tue Jan  4 2005 Christopher Aillon <caillon@redhat.com> 1:2.4.1-2
 - Add Dan Reed's CTCP patch to support multiline messages (#136545)
 
