@@ -8,7 +8,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.4.3
-Release:   2
+Release:   3
 Epoch:     1
 Group:     Applications/Internet
 License:   GPL
@@ -25,6 +25,7 @@ Patch23: xchat-2.0.9-simplify-to-use-htmlview-for-default-webbrowser.patch
 Patch30: xchat-2.4.2-multiline-messages.patch
 Patch31: xchat-2.4.2-nickmenu-away-msg.patch
 Patch32: xchat-2.4.3-lib64.patch
+Patch33: xchat-2.4.3-im_context_filter_keypress.patch
 
 BuildRequires: perl python-devel openssl-devel pkgconfig
 # Added for bugzilla bug #91676 - ./configure indicates these versions or
@@ -52,6 +53,7 @@ System.
 %patch30 -p1 -b .multiline-messages
 %patch31 -p0 -b .nickmenu-away-msg
 %patch32 -p1 -b .lib64
+%patch33 -p1 -b .im_context_filter_keypress
 
 %build
 # Remove CVS files from source dirs so they're not installed into doc dirs.
@@ -113,6 +115,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Sun May 15 2005 Warren Togami <wtogami@redhat.com> 1:2.4.3-3
+- Prevent interception of down arrow during Input Method (#144588 tagoh)
+
 * Thu Apr 14 2005 Warren Togami <wtogami@redhat.com> 1:2.4.3-2
 - fix plugins on lib64 (#113188 Ville Skytta)
 
