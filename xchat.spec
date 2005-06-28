@@ -7,23 +7,21 @@
 
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
-Version:   2.4.3
-Release:   3
+Version:   2.4.4
+Release:   1
 Epoch:     1
 Group:     Applications/Internet
 License:   GPL
 URL:       http://www.xchat.org
 Source:    http://www.xchat.org/files/source/2.0/xchat-%{version}.tar.bz2
 Buildroot: %{_tmppath}/%{name}-%{version}-root
-
 # Patches 0-9 reserved for official xchat.org patches
-Patch10: xchat-2.4.3-redhat-desktop.patch
+Patch10: xchat-2.4.4-redhat-desktop.patch
 Patch12: xchat-1.8.7-use-sysconf-to-detect-cpus.patch
 Patch19: xchat-2.0.2-freenode.patch
 Patch22: xchat-2.0.9-simplify-to-use-gnome-open-for-default-webbrowser.patch
 Patch23: xchat-2.0.9-simplify-to-use-htmlview-for-default-webbrowser.patch
-Patch30: xchat-2.4.2-multiline-messages.patch
-Patch31: xchat-2.4.2-nickmenu-away-msg.patch
+Patch30: xchat-2.4.4-multiline-messages.patch
 Patch32: xchat-2.4.3-lib64.patch
 Patch33: xchat-2.4.3-im_context_filter_keypress.patch
 
@@ -51,7 +49,6 @@ System.
 %patch23 -p1 -b .simplify-to-use-htmlview-for-default-webbrowser
 %endif
 %patch30 -p1 -b .multiline-messages
-%patch31 -p0 -b .nickmenu-away-msg
 %patch32 -p1 -b .lib64
 %patch33 -p1 -b .im_context_filter_keypress
 
@@ -115,6 +112,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Sun Jun 26 2005 Christopher Aillon <caillon@redhat.com> 1:2.4.4-1
+- Update to xchat-2.4.4
+
 * Sun May 15 2005 Warren Togami <wtogami@redhat.com> 1:2.4.3-3
 - Prevent interception of down arrow during Input Method (#144588 tagoh)
 
