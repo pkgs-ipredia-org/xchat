@@ -8,7 +8,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.4.4
-Release:   1
+Release:   2
 Epoch:     1
 Group:     Applications/Internet
 License:   GPL
@@ -112,6 +112,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Mon Aug 15 2005 Christopher Aillon <caillon@redhat.com> 1:2.4.4-2
+- Rebuild
+
 * Sun Jun 26 2005 Christopher Aillon <caillon@redhat.com> 1:2.4.4-1
 - Update to xchat-2.4.4
 
