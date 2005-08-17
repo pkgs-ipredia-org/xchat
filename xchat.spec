@@ -8,7 +8,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.4.4
-Release:   2
+Release:   3
 Epoch:     1
 Group:     Applications/Internet
 License:   GPL
@@ -24,6 +24,8 @@ Patch23: xchat-2.0.9-simplify-to-use-htmlview-for-default-webbrowser.patch
 Patch30: xchat-2.4.4-multiline-messages.patch
 Patch32: xchat-2.4.3-lib64.patch
 Patch33: xchat-2.4.3-im_context_filter_keypress.patch
+# filed as 1262423 in the xchat bug tracker
+Patch34: xchat-2.4.4-unrealize.patch
 
 BuildRequires: perl python-devel openssl-devel pkgconfig
 # Added for bugzilla bug #91676 - ./configure indicates these versions or
@@ -51,6 +53,7 @@ System.
 %patch30 -p1 -b .multiline-messages
 %patch32 -p1 -b .lib64
 %patch33 -p1 -b .im_context_filter_keypress
+%patch34 -p1 -b .unrealize
 
 %build
 # Remove CVS files from source dirs so they're not installed into doc dirs.
@@ -112,6 +115,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Wed Aug 17 2005 Matthias Clasen <mclasen@redhat.com> 1:2.4.4-3
+- Fix a bug that could lead to occasional crashes
+
 * Mon Aug 15 2005 Christopher Aillon <caillon@redhat.com> 1:2.4.4-2
 - Rebuild
 
