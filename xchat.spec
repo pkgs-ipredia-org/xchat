@@ -8,7 +8,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.4.5
-Release:   1
+Release:   2
 Epoch:     1
 Group:     Applications/Internet
 License:   GPL
@@ -115,6 +115,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Wed Nov  9 2005 Christopher Aillon <caillon@redhat.com> 1:2.4.5-2
+- Rebuild against newer openssl
+
 * Mon Sep 19 2005 Christopher Aillon <caillon@redhat.com> 1:2.4.5-1
 - X-Chat 2.4.5
 
