@@ -2,13 +2,10 @@
 # Red Hat Linux 9, and Red Hat Enterprise Linux 3, set to 0
 %define build_fc2		1
 
-# Nobody likely uses this so we disable it
-%define with_tclplugin		0
-
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
-Version:   2.4.5
-Release:   2
+Version:   2.6.0
+Release:   1
 Epoch:     1
 Group:     Applications/Internet
 License:   GPL
@@ -16,7 +13,6 @@ URL:       http://www.xchat.org
 Source:    http://www.xchat.org/files/source/2.0/xchat-%{version}.tar.bz2
 Buildroot: %{_tmppath}/%{name}-%{version}-root
 # Patches 0-9 reserved for official xchat.org patches
-Patch1:  xc245-fix-te-notify.diff
 
 Patch10: xchat-2.4.4-redhat-desktop.patch
 Patch12: xchat-1.8.7-use-sysconf-to-detect-cpus.patch
@@ -29,8 +25,8 @@ Patch34: xchat-2.4.4-unrealize.patch
 
 
 BuildRequires: perl python-devel openssl-devel pkgconfig
-# Added for bugzilla bug #91676 - ./configure indicates these versions or
-# greater are required. 
+BuildRequires: GConf2-devel
+BuildRequires: dbus-devel >= 0.35
 BuildRequires: glib2-devel >= 2.0.3, gtk2-devel >= 2.0.3, bison >= 1.35
 BuildRequires: gettext /bin/sed
 # Ensure that a compatible libperl is installed
@@ -42,7 +38,6 @@ System.
 
 %prep
 %setup -q
-%patch1 -p1 -b .fix-te-notify
 
 %patch10 -p1 -b .redhat-desktop-file
 %patch12 -p0 -b .use-sysconf-to-detect-cpus
@@ -62,59 +57,59 @@ find . -name CVS -type d | xargs rm -rf
 export CFLAGS="$RPM_OPT_FLAGS $(perl -MExtUtils::Embed -e ccopts)"
 export LDFLAGS=$(perl -MExtUtils::Embed -e ldopts)
 
-if pkg-config openssl ; then
-	export CFLAGS="$CFLAGS `pkg-config --cflags openssl`"
-	export CPPFLAGS="$CPPFLAGS `pkg-config --cflags-only-I openssl`"
-	export LDFLAGS="$LDFLAGS `pkg-config --libs-only-L openssl`"
-fi
-
 %configure --disable-panel \
            --disable-textfe \
            --enable-openssl \
            --enable-python \
-%if %{with_tclplugin}
-	   --enable-tcl \
-%else
 	   --disable-tcl \
-%endif	   
            --enable-ipv6
 
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
+%{__rm} -rf $RPM_BUILD_ROOT
+export GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL=1
 %makeinstall
+unset GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL
+
+# Get rid of static libs
+%{__rm} -f $RPM_BUILD_ROOT%{_libdir}/*.la
 
 # Move plugins around
-mkdir -p $RPM_BUILD_ROOT%{_libdir}/xchat/plugins
-mv $RPM_BUILD_ROOT%{_libdir}/perl.so $RPM_BUILD_ROOT%{_libdir}/xchat/plugins/
-mv $RPM_BUILD_ROOT%{_libdir}/python.so $RPM_BUILD_ROOT%{_libdir}/xchat/plugins/
-%if %{with_tclplugin}
-mv $RPM_BUILD_ROOT%{_libdir}/tcl.so $RPM_BUILD_ROOT%{_libdir}/xchat/plugins/
-%else
-rm -f $RPM_BUILD_ROOT%{_libdir}/tcl.so
-%endif	   
-
-# Remove unwanted stuff
-rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
-#rm -f $RPM_BUILD_ROOT%{_datadir}/applications/xchat.desktop
-#rm -f $RPM_BUILD_ROOT/etc/X11/applnk/Internet/xchat.desktop
+%{__mkdir_p} $RPM_BUILD_ROOT%{_libdir}/xchat/plugins
+for plugin in perl.so python.so dbus.so; do
+  %{__mv} $RPM_BUILD_ROOT%{_libdir}/$plugin $RPM_BUILD_ROOT%{_libdir}/xchat/plugins/
+done
 
 %find_lang %name
+
+%post
+# Install schema
+export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
+SCHEMAS="apps_xchat_url_handler.schemas"
+for S in $SCHEMAS; do
+  gconftool-2 --makefile-install-rule /etc/gconf/schemas/$S > /dev/null
+done
+unset GCONF_CONFIG_SOURCE
+
+%clean
+%{__rm} -rf $RPM_BUILD_ROOT
 
 %files -f %{name}.lang
 %defattr(-,root,root)
 %doc README ChangeLog
 %{_bindir}/xchat
+%{_bindir}/xchat-remote
+%dir %{_libdir}/xchat/plugins
 %{_libdir}/xchat/plugins/*.so
-#%{_datadir}/applications/net-xchat.desktop
 %{_datadir}/applications/xchat.desktop
 %{_datadir}/pixmaps/*
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+%{_sysconfdir}/gconf/schemas/apps_xchat_url_handler.schemas
 
 %changelog
+* Thu Nov 10 2005 Christopher Aillon <caillon@redhat.com> 1:2.6.0-1
+- Update to 2.6.0
+
 * Wed Nov  9 2005 Christopher Aillon <caillon@redhat.com> 1:2.4.5-2
 - Rebuild against newer openssl
 
