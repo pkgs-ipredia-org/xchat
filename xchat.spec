@@ -5,7 +5,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.6.0
-Release:   2
+Release:   2 
 Epoch:     1
 Group:     Applications/Internet
 License:   GPL
@@ -26,7 +26,7 @@ Patch34: xchat-2.4.4-unrealize.patch
 
 BuildRequires: perl python-devel openssl-devel pkgconfig
 BuildRequires: GConf2-devel
-BuildRequires: dbus-devel >= 0.35
+BuildRequires: dbus-devel >= 0.60
 BuildRequires: glib2-devel >= 2.0.3, gtk2-devel >= 2.0.3, bison >= 1.35
 BuildRequires: gettext /bin/sed
 # For gconftool-2:
@@ -109,6 +109,9 @@ unset GCONF_CONFIG_SOURCE
 %{_sysconfdir}/gconf/schemas/apps_xchat_url_handler.schemas
 
 %changelog
+* Thu Dec 01 2005 John (J5) Palmieri <johnp@redhat.com> - 1:2.6.0-3
+- rebuild for new dbus
+
 * Tue Nov 15 2005 Florian La Roche <laroche@redhat.com> 1:2.6.0-2
 - Require(post): GConf2
 
