@@ -23,6 +23,7 @@ Patch33: xchat-2.4.3-im_context_filter_keypress.patch
 # filed as 1262423 in the xchat bug tracker
 Patch34: xchat-2.4.4-unrealize.patch
 
+Patch35: xchat-2.6.0-dbus-api.patch
 
 BuildRequires: perl python-devel openssl-devel pkgconfig
 BuildRequires: GConf2-devel
@@ -51,6 +52,7 @@ System.
 %endif
 %patch33 -p1 -b .im_context_filter_keypress
 %patch34 -p1 -b .unrealize
+%patch35 -p1 -b .dbus-api
 
 %build
 # Remove CVS files from source dirs so they're not installed into doc dirs.
