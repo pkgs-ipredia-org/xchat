@@ -5,7 +5,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.6.0
-Release:   2 
+Release:   3 
 Epoch:     1
 Group:     Applications/Internet
 License:   GPL
