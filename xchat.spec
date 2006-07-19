@@ -27,7 +27,7 @@ Patch35: xchat-2.6.0-dbus-api.patch
 
 BuildRequires: perl python-devel openssl-devel pkgconfig
 BuildRequires: GConf2-devel
-BuildRequires: dbus-devel >= 0.60, dbus-glib >= 0.60
+BuildRequires: dbus-devel >= 0.60, dbus-glib-devel >= 0.60
 BuildRequires: glib2-devel >= 2.0.3, gtk2-devel >= 2.0.3, bison >= 1.35
 BuildRequires: gettext /bin/sed
 # For gconftool-2:
