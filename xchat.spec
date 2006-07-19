@@ -5,7 +5,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.6.0
-Release:   5
+Release:   6
 Epoch:     1
 Group:     Applications/Internet
 License:   GPL
@@ -111,6 +111,9 @@ unset GCONF_CONFIG_SOURCE
 %{_sysconfdir}/gconf/schemas/apps_xchat_url_handler.schemas
 
 %changelog
+* Wed Jul 19 2006 Matthias Clasen <mclasen@redhat.com> -  1:2.6.0-6
+- Rebuild against dbus
+
 * Mon May 22 2006 Jesse Keating <jkeating@redhat.com> - 1:2.6.0-5
 - Adding missing buildreq (bz:191577, thanks Paul F.)
 
