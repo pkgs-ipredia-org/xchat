@@ -30,6 +30,7 @@ BuildRequires: GConf2-devel
 BuildRequires: dbus-devel >= 0.60, dbus-glib-devel >= 0.60
 BuildRequires: glib2-devel >= 2.0.3, gtk2-devel >= 2.0.3, bison >= 1.35
 BuildRequires: gettext /bin/sed
+BuildRequires: libtool
 # For gconftool-2:
 Requires(post): GConf2
 # Ensure that a compatible libperl is installed
