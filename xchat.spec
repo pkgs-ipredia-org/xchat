@@ -4,29 +4,30 @@
 
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
-Version:   2.6.0
-Release:   6
+Version:   2.6.6
+Release:   2%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPL
 URL:       http://www.xchat.org
-Source:    http://www.xchat.org/files/source/2.0/xchat-%{version}.tar.bz2
+Source:    http://www.xchat.org/files/source/2.6/xchat-%{version}.tar.bz2
 Buildroot: %{_tmppath}/%{name}-%{version}-root
 # Patches 0-9 reserved for official xchat.org patches
 
 Patch10: xchat-2.4.4-redhat-desktop.patch
 Patch12: xchat-1.8.7-use-sysconf-to-detect-cpus.patch
 Patch19: xchat-2.0.2-freenode.patch
-Patch22: xchat-2.0.9-simplify-to-use-gnome-open-for-default-webbrowser.patch
-Patch23: xchat-2.0.9-simplify-to-use-htmlview-for-default-webbrowser.patch
+Patch22: xchat-2.6.6-simplify-to-use-gnome-open-for-default-webbrowser.patch
+Patch23: xchat-2.6.6-simplify-to-use-htmlview-for-default-webbrowser.patch
 Patch33: xchat-2.4.3-im_context_filter_keypress.patch
 # filed as 1262423 in the xchat bug tracker
 Patch34: xchat-2.4.4-unrealize.patch
 
-Patch35: xchat-2.6.0-dbus-api.patch
+# upstream 2.6.6 fi patch
+Patch35: xchat-2.6.6-fi.patch
 
 BuildRequires: perl python-devel openssl-devel pkgconfig
-BuildRequires: GConf2-devel
+BuildRequires: GConf2-devel, gtkspell-devel
 BuildRequires: dbus-devel >= 0.60, dbus-glib-devel >= 0.60
 BuildRequires: glib2-devel >= 2.0.3, gtk2-devel >= 2.0.3, bison >= 1.35
 BuildRequires: gettext /bin/sed
@@ -35,6 +36,7 @@ BuildRequires: libtool
 Requires(post): GConf2
 # Ensure that a compatible libperl is installed
 Requires: perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Requires: gtkspell
 
 %description
 X-Chat is an easy to use graphical IRC chat client for the X Window
@@ -53,7 +55,7 @@ System.
 %endif
 %patch33 -p1 -b .im_context_filter_keypress
 %patch34 -p1 -b .unrealize
-%patch35 -p1 -b .dbus-api
+%patch35 -p1 -b .fi266
 
 %build
 # Remove CVS files from source dirs so they're not installed into doc dirs.
@@ -67,7 +69,10 @@ export LDFLAGS=$(perl -MExtUtils::Embed -e ldopts)
            --enable-openssl \
            --enable-python \
 	   --disable-tcl \
-           --enable-ipv6
+           --enable-ipv6 
+
+# Spell checking breaks Input Method commit with ENTER
+#           --enable-spell=gtkspell
 
 make %{?_smp_mflags}
 
@@ -112,6 +117,15 @@ unset GCONF_CONFIG_SOURCE
 %{_sysconfdir}/gconf/schemas/apps_xchat_url_handler.schemas
 
 %changelog
+* Thu Aug 17 2006 Warren Togami <wtogami@redhat.com> - 1:2.6.6-2
+- disable gtkspell because it breaks Input Method commit
+- apply upstream fi patch
+
+* Wed Aug  2 2006 Marc Deslauriers <marcdeslauriers@videotron.ca> -  1:2.6.6-1
+- Update to 2.6.6
+- Removed upstreamed dbus patch
+- Enabled gtkspell support
+
 * Wed Jul 19 2006 Matthias Clasen <mclasen@redhat.com> -  1:2.6.0-6
 - Rebuild against dbus
 
