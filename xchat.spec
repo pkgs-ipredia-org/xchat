@@ -5,7 +5,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.6.6
-Release:   2%{?dist}
+Release:   3%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPL
@@ -69,10 +69,11 @@ export LDFLAGS=$(perl -MExtUtils::Embed -e ldopts)
            --enable-openssl \
            --enable-python \
 	   --disable-tcl \
-           --enable-ipv6 
+           --enable-ipv6 \
+           --enable-spell=static
 
-# Spell checking breaks Input Method commit with ENTER
-#           --enable-spell=gtkspell
+# gtkspell breaks Input Method commit with ENTER
+# static works if the optional exchant package is installed
 
 make %{?_smp_mflags}
 
@@ -117,6 +118,10 @@ unset GCONF_CONFIG_SOURCE
 %{_sysconfdir}/gconf/schemas/apps_xchat_url_handler.schemas
 
 %changelog
+* Wed Aug 23 2006 Warren Togami <wtogami@redhat.com> - 1:2.6.6-3
+- enable optional spell checking if you install enchant
+  because gtkspell is currently unusable (#201116)
+
 * Thu Aug 17 2006 Warren Togami <wtogami@redhat.com> - 1:2.6.6-2
 - disable gtkspell because it breaks Input Method commit
 - apply upstream fi patch
