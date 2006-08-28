@@ -5,7 +5,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.6.6
-Release:   3%{?dist}
+Release:   4%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPL
@@ -25,6 +25,8 @@ Patch34: xchat-2.4.4-unrealize.patch
 
 # upstream 2.6.6 fi patch
 Patch35: xchat-2.6.6-fi.patch
+# upstream 2.6.6 es patch
+Patch36: xchat-2.6.6-es.patch
 
 BuildRequires: perl python-devel openssl-devel pkgconfig
 BuildRequires: GConf2-devel, gtkspell-devel
@@ -56,6 +58,7 @@ System.
 %patch33 -p1 -b .im_context_filter_keypress
 %patch34 -p1 -b .unrealize
 %patch35 -p1 -b .fi266
+%patch36 -p1 -b .es266
 
 %build
 # Remove CVS files from source dirs so they're not installed into doc dirs.
@@ -118,6 +121,9 @@ unset GCONF_CONFIG_SOURCE
 %{_sysconfdir}/gconf/schemas/apps_xchat_url_handler.schemas
 
 %changelog
+* Mon Aug 28 2006 Warren Togami <wtogami@redhat.com> - 1:2.6.6-4
+- add upstream 2.6.6 es patch
+
 * Wed Aug 23 2006 Warren Togami <wtogami@redhat.com> - 1:2.6.6-3
 - enable optional spell checking if you install enchant
   because gtkspell is currently unusable (#201116)

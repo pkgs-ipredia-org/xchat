@@ -1,0 +1,33 @@
+#
+# Fix a few bad translation errors in xchat-2.6.6 Spanish.
+#
+--- xchat-2.6.6/po/es.po	2006-08-28 14:09:43.000000000 +1000
++++ xchat-2.6.6p/po/es.po	2006-08-28 14:12:13.000000000 +1000
+@@ -747,15 +747,15 @@
+ 
+ #: src/common/textevents.h:60
+ msgid "%C22*%O$t%C22Channel $1 modes: $2"
+-msgstr "C22*%O$t%C22Canal $1 modos: $2"
++msgstr "%C22*%O$t%C22Canal $1 modos: $2"
+ 
+ #: src/common/textevents.h:63
+ msgid "$4%C21%B%H<%H$1%H>%H%O%C21$t$2"
+-msgstr "4%C21%B%H<%H$1%H>%H%O%C21$t$2"
++msgstr "$4%C21%B%H<%H$1%H>%H%O%C21$t$2"
+ 
+ #: src/common/textevents.h:66
+ msgid "%C28-%C29$1/$2%C28-%O$t$3"
+-msgstr "C28-%C29$1/$2%C28-%O$t$3"
++msgstr "%C28-%C29$1/$2%C28-%O$t$3"
+ 
+ #: src/common/textevents.h:69
+ msgid "%C22*%O$t%C26$1%O gives channel operator status to%C26 $2"
+@@ -799,7 +799,7 @@
+ 
+ #: src/common/textevents.h:99
+ msgid "%C22*%O$t%C22Connecting to $1 ($2) port $3%O..."
+-msgstr "%C22*%O$t%C22Conectando a %1 ($2) puerto $3%O..."
++msgstr "%C22*%O$t%C22Conectando a $1 ($2) puerto $3%O..."
+ 
+ #: src/common/textevents.h:102
+ msgid "%C21*%O$t%C21Connection failed. Error: $1"
