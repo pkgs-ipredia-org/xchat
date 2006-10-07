@@ -5,7 +5,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.6.6
-Release:   4%{?dist}
+Release:   5%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPL
@@ -17,6 +17,7 @@ Buildroot: %{_tmppath}/%{name}-%{version}-root
 Patch10: xchat-2.4.4-redhat-desktop.patch
 Patch12: xchat-1.8.7-use-sysconf-to-detect-cpus.patch
 Patch19: xchat-2.0.2-freenode.patch
+Patch21: xchat-2.6.6-nonblock.patch
 Patch22: xchat-2.6.6-simplify-to-use-gnome-open-for-default-webbrowser.patch
 Patch23: xchat-2.6.6-simplify-to-use-htmlview-for-default-webbrowser.patch
 Patch33: xchat-2.4.3-im_context_filter_keypress.patch
@@ -50,6 +51,7 @@ System.
 %patch10 -p1 -b .redhat-desktop-file
 %patch12 -p0 -b .use-sysconf-to-detect-cpus
 %patch19 -p0 -b .freenode
+%patch21 -p1 -b .nonblock
 %if %{build_fc2}
 %patch22 -p1 -b .simplify-to-use-gnome-open-for-default-webbrowser
 %else
@@ -121,6 +123,9 @@ unset GCONF_CONFIG_SOURCE
 %{_sysconfdir}/gconf/schemas/apps_xchat_url_handler.schemas
 
 %changelog
+* Sat Oct  7 2006 David Woodhouse <dwmw2@redhat.com> - 1.2.6.6-5
+- Fix nonblocking SSL socket behaviour
+
 * Mon Aug 28 2006 Warren Togami <wtogami@redhat.com> - 1:2.6.6-4
 - add upstream 2.6.6 es patch
 
