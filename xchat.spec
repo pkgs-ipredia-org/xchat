@@ -2,10 +2,11 @@
 # Red Hat Linux 9, and Red Hat Enterprise Linux 3, set to 0
 %define build_fc2		1
 
+%define gconf_version 2.14
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.6.6
-Release:   5%{?dist}
+Release:   6%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPL
@@ -36,7 +37,9 @@ BuildRequires: glib2-devel >= 2.0.3, gtk2-devel >= 2.0.3, bison >= 1.35
 BuildRequires: gettext /bin/sed
 BuildRequires: libtool
 # For gconftool-2:
-Requires(post): GConf2
+Requires(post): GConf2 >= %{gconf_version}
+Requires(preun): GConf2 >= %{gconf_version}
+
 # Ensure that a compatible libperl is installed
 Requires: perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 Requires: gtkspell
@@ -102,11 +105,15 @@ done
 %post
 # Install schema
 export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
-SCHEMAS="apps_xchat_url_handler.schemas"
-for S in $SCHEMAS; do
-  gconftool-2 --makefile-install-rule /etc/gconf/schemas/$S > /dev/null
-done
+gconftool-2 --makefile-install-rule /etc/gconf/schemas/apps_xchat_url_handler.schemas > /dev/null || :
 unset GCONF_CONFIG_SOURCE
+
+%preun
+if [ "$1" -gt 0 ]; then
+  export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
+  gconftool-2 --makefile-uninstall-rule /etc/gconf/schemas/apps_xchat_url_handler.schemas > /dev/null || :
+  unset GCONF_CONFIG_SOURCE
+fi
 
 %clean
 %{__rm} -rf $RPM_BUILD_ROOT
@@ -123,6 +130,9 @@ unset GCONF_CONFIG_SOURCE
 %{_sysconfdir}/gconf/schemas/apps_xchat_url_handler.schemas
 
 %changelog
+* Tue Oct 17 2006 Matthias Clasen <mclasen@redhat.com> - 1.2.6.6-6
+- Tighten up Requires (#203813)
+
 * Sat Oct  7 2006 David Woodhouse <dwmw2@redhat.com> - 1.2.6.6-5
 - Fix nonblocking SSL socket behaviour
 
