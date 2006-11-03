@@ -7,7 +7,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.6.6
-Release:   7%{?dist}
+Release:   8%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPL
@@ -106,18 +106,18 @@ done
 %post
 # Install schema
 export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
-gconftool-2 --makefile-install-rule /etc/gconf/schemas/apps_xchat_url_handler.schemas > /dev/null || :
+gconftool-2 --makefile-install-rule /etc/gconf/schemas/apps_xchat_url_handler.schemas >& /dev/null || :
 
 %pre
 if [ "$1" -gt 1 ]; then
   export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
-  gconftool-2 --makefile-uninstall-rule /etc/gconf/schemas/apps_xchat_url_handler.schemas > /dev/null || :
+  gconftool-2 --makefile-uninstall-rule /etc/gconf/schemas/apps_xchat_url_handler.schemas >& /dev/null || :
 fi
 
 %preun
 if [ "$1" -eq 0 ]; then
   export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
-  gconftool-2 --makefile-uninstall-rule /etc/gconf/schemas/apps_xchat_url_handler.schemas > /dev/null || :
+  gconftool-2 --makefile-uninstall-rule /etc/gconf/schemas/apps_xchat_url_handler.schemas >& /dev/null || :
 fi
 
 %clean
@@ -135,6 +135,9 @@ fi
 %{_sysconfdir}/gconf/schemas/apps_xchat_url_handler.schemas
 
 %changelog
+* Fri Nov  3 2006 Matthias Clasen <mclasen@redhat.com> - 1.2.6.6-8
+- Silence %%pre (#213838)
+
 * Wed Oct 18 2006 Matthias Clasen <mclasen@redhat.com> - 1.2.6.6-7
 - Fix scripts according to packaging guidelines
 
