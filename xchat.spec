@@ -7,7 +7,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.6.6
-Release:   8%{?dist}
+Release:   9%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPL
@@ -128,6 +128,7 @@ fi
 %doc README ChangeLog
 %{_bindir}/xchat
 %{_bindir}/xchat-remote
+%dir %{_libdir}/xchat
 %dir %{_libdir}/xchat/plugins
 %{_libdir}/xchat/plugins/*.so
 %{_datadir}/applications/xchat.desktop
@@ -135,16 +136,19 @@ fi
 %{_sysconfdir}/gconf/schemas/apps_xchat_url_handler.schemas
 
 %changelog
-* Fri Nov  3 2006 Matthias Clasen <mclasen@redhat.com> - 1.2.6.6-8
+* Sat Mar 24 2007 Matthias Clasen <mclasen@redhat.com> - 1:2.6.6-9
+- Own /usr/lib/xchat (#166731)
+
+* Fri Nov  3 2006 Matthias Clasen <mclasen@redhat.com> - 1:2.6.6-8
 - Silence %%pre (#213838)
 
-* Wed Oct 18 2006 Matthias Clasen <mclasen@redhat.com> - 1.2.6.6-7
+* Wed Oct 18 2006 Matthias Clasen <mclasen@redhat.com> - 1:2.6.6-7
 - Fix scripts according to packaging guidelines
 
-* Tue Oct 17 2006 Matthias Clasen <mclasen@redhat.com> - 1.2.6.6-6
+* Tue Oct 17 2006 Matthias Clasen <mclasen@redhat.com> - 1:2.6.6-6
 - Tighten up Requires (#203813)
 
-* Sat Oct  7 2006 David Woodhouse <dwmw2@redhat.com> - 1.2.6.6-5
+* Sat Oct  7 2006 David Woodhouse <dwmw2@redhat.com> - 1:2.6.6-5
 - Fix nonblocking SSL socket behaviour
 
 * Mon Aug 28 2006 Warren Togami <wtogami@redhat.com> - 1:2.6.6-4
