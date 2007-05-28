@@ -3,7 +3,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.2
-Release:   3%{?dist}
+Release:   4%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPL
@@ -38,16 +38,21 @@ Provides: xchat-perl = %{epoch}:%{version}-%{release}
 Obsoletes: xchat-perl < %{epoch}:%{version}-%{release}
 Provides: xchat-python = %{epoch}:%{version}-%{release}
 Obsoletes: xchat-python < %{epoch}:%{version}-%{release}
-Provides: xchat-tcl = %{epoch}:%{version}-%{release}
-Obsoletes: xchat-tcl < %{epoch}:%{version}-%{release}
 
 %description
 X-Chat is an easy to use graphical IRC chat client for the X Window System.
 It allows you to join multiple IRC channels (chat rooms) at the same time, 
 talk publicly, private one-on-one conversations etc. Even file transfers
-are possible. 
+are possible.
 
-This include the plugins to run the Perl, Python and Tcl scripts.
+This includes the plugins to run the Perl and Python scripts.
+
+%package tcl
+Summary: Tcl script plugin for X-Chat
+Group: Applications/Internet
+Requires: %{name} = %{epoch}:%{version}-%{release}
+%description tcl
+This package contains the X-Chat plugin providing the Tcl scripting interface.
 
 %prep
 %setup -q
@@ -70,7 +75,7 @@ export LDFLAGS=$(perl -MExtUtils::Embed -e ldopts)
            --enable-gtkfe \
            --enable-openssl \
            --enable-python \
-           --enable-tcl \
+           --enable-tcl=%{_libdir} \
            --enable-ipv6 \
            --enable-spell=static \
            --enable-shm
@@ -129,13 +134,23 @@ fi
 %{_bindir}/xchat
 %dir %{_libdir}/xchat
 %dir %{_libdir}/xchat/plugins
-%{_libdir}/xchat/plugins/*.so
+%{_libdir}/xchat/plugins/perl.so
+%{_libdir}/xchat/plugins/python.so
 %{_datadir}/applications/xchat.desktop
 %{_datadir}/pixmaps/*
 %{_sysconfdir}/gconf/schemas/apps_xchat_url_handler.schemas
 %{_datadir}/dbus-1/services/org.xchat.service.service
 
+%files tcl
+%defattr(-,root,root)
+%{_libdir}/xchat/plugins/tcl.so
+
 %changelog
+* Mon May 28 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.2-4
+- set explicit libdir for Tcl so it's found on lib64 arches (Remi Collet)
+- move Tcl plugin into subpackage
+  (not an incompatible change as this was not built in f7-final at all)
+
 * Mon May 28 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.2-3
 - use versioned Provides/Obsoletes to allow future package split
 
