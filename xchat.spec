@@ -3,7 +3,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.2
-Release:   2%{?dist}
+Release:   3%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPL
@@ -34,8 +34,12 @@ Requires(preun): GConf2 >= %{gconf_version}
 Requires: perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 Requires: gtkspell
 
-Provides:    xchat-perl, xchat-python, xchat-tcl
-Obsoletes:   xchat-perl, xchat-python, xchat-tcl
+Provides: xchat-perl = %{epoch}:%{version}-%{release}
+Obsoletes: xchat-perl < %{epoch}:%{version}-%{release}
+Provides: xchat-python = %{epoch}:%{version}-%{release}
+Obsoletes: xchat-python < %{epoch}:%{version}-%{release}
+Provides: xchat-tcl = %{epoch}:%{version}-%{release}
+Obsoletes: xchat-tcl < %{epoch}:%{version}-%{release}
 
 %description
 X-Chat is an easy to use graphical IRC chat client for the X Window System.
@@ -132,6 +136,9 @@ fi
 %{_datadir}/dbus-1/services/org.xchat.service.service
 
 %changelog
+* Mon May 28 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.2-3
+- use versioned Provides/Obsoletes to allow future package split
+
 * Mon May 28 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.2-2
 - merge updates by Remi Collet and Marius Feraru (#224180)
 - mention Tcl in description
