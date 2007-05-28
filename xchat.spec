@@ -1,40 +1,29 @@
-# Enable this for Fedora Core 2 builds and newer.  For Fedora Core 1,
-# Red Hat Linux 9, and Red Hat Enterprise Linux 3, set to 0
-%define build_fc2		1
-
 %define gconf_version 2.14
 
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
-Version:   2.6.6
-Release:   9%{?dist}
+Version:   2.8.2
+Release:   2%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPL
 URL:       http://www.xchat.org
-Source:    http://www.xchat.org/files/source/2.6/xchat-%{version}.tar.bz2
-Buildroot: %{_tmppath}/%{name}-%{version}-root
+Source:    http://www.xchat.org/files/source/2.8/xchat-%{version}.tar.bz2
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
 # Patches 0-9 reserved for official xchat.org patches
 
-Patch10: xchat-2.4.4-redhat-desktop.patch
+Patch10: xchat-2.8.2-desktop.patch
 Patch12: xchat-1.8.7-use-sysconf-to-detect-cpus.patch
 Patch19: xchat-2.0.2-freenode.patch
-Patch21: xchat-2.6.6-nonblock.patch
-Patch22: xchat-2.6.6-simplify-to-use-gnome-open-for-default-webbrowser.patch
-Patch23: xchat-2.6.6-simplify-to-use-htmlview-for-default-webbrowser.patch
 Patch33: xchat-2.4.3-im_context_filter_keypress.patch
 # filed as 1262423 in the xchat bug tracker
 Patch34: xchat-2.4.4-unrealize.patch
 
-# upstream 2.6.6 fi patch
-Patch35: xchat-2.6.6-fi.patch
-# upstream 2.6.6 es patch
-Patch36: xchat-2.6.6-es.patch
-
-BuildRequires: perl python-devel openssl-devel pkgconfig
-BuildRequires: GConf2-devel, gtkspell-devel
+BuildRequires: perl python-devel openssl-devel pkgconfig, tcl-devel
+BuildRequires: GConf2-devel
 BuildRequires: dbus-devel >= 0.60, dbus-glib-devel >= 0.60
-BuildRequires: glib2-devel >= 2.0.3, gtk2-devel >= 2.0.3, bison >= 1.35
+BuildRequires: glib2-devel >= 2.10.0, gtk2-devel >= 2.10.0, bison >= 1.35
 BuildRequires: gettext /bin/sed
 BuildRequires: libtool
 # For gconftool-2:
@@ -45,26 +34,25 @@ Requires(preun): GConf2 >= %{gconf_version}
 Requires: perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 Requires: gtkspell
 
+Provides:    xchat-perl, xchat-python, xchat-tcl
+Obsoletes:   xchat-perl, xchat-python, xchat-tcl
+
 %description
-X-Chat is an easy to use graphical IRC chat client for the X Window
-System. 
+X-Chat is an easy to use graphical IRC chat client for the X Window System.
+It allows you to join multiple IRC channels (chat rooms) at the same time, 
+talk publicly, private one-on-one conversations etc. Even file transfers
+are possible. 
+
+This include the plugins to run the Perl, Python and Tcl scripts.
 
 %prep
 %setup -q
 
-%patch10 -p1 -b .redhat-desktop-file
+%patch10 -p1 -b .desktop-file
 %patch12 -p0 -b .use-sysconf-to-detect-cpus
 %patch19 -p0 -b .freenode
-%patch21 -p1 -b .nonblock
-%if %{build_fc2}
-%patch22 -p1 -b .simplify-to-use-gnome-open-for-default-webbrowser
-%else
-%patch23 -p1 -b .simplify-to-use-htmlview-for-default-webbrowser
-%endif
 %patch33 -p1 -b .im_context_filter_keypress
 %patch34 -p1 -b .unrealize
-%patch35 -p1 -b .fi266
-%patch36 -p1 -b .es266
 
 %build
 # Remove CVS files from source dirs so they're not installed into doc dirs.
@@ -75,38 +63,45 @@ export LDFLAGS=$(perl -MExtUtils::Embed -e ldopts)
 
 %configure --disable-panel \
            --disable-textfe \
+           --enable-gtkfe \
            --enable-openssl \
            --enable-python \
-	   --disable-tcl \
+           --enable-tcl \
            --enable-ipv6 \
-           --enable-spell=static
+           --enable-spell=static \
+           --enable-shm
 
 # gtkspell breaks Input Method commit with ENTER
-# static works if the optional exchant package is installed
+# static works if the optional enchant package is installed
 
 make %{?_smp_mflags}
 
+
 %install
 %{__rm} -rf $RPM_BUILD_ROOT
-export GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL=1
-%makeinstall
-unset GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL
+%{__make} install DESTDIR=$RPM_BUILD_ROOT GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL=1
 
 # Get rid of static libs
-%{__rm} -f $RPM_BUILD_ROOT%{_libdir}/*.la
-
-# Move plugins around
-%{__mkdir_p} $RPM_BUILD_ROOT%{_libdir}/xchat/plugins
-for plugin in perl.so python.so dbus.so; do
-  %{__mv} $RPM_BUILD_ROOT%{_libdir}/$plugin $RPM_BUILD_ROOT%{_libdir}/xchat/plugins/
-done
+%{__rm} -f $RPM_BUILD_ROOT%{_libdir}/xchat/plugins/*.la
 
 %find_lang %name
+
+# do not Provide plugins .so
+%define _use_internal_dependency_generator 0
+%{__cat} << \EOF > %{name}.prov
+#!%{_buildshell}
+%{__grep} -v %{_docdir} - | %{__find_provides} $* \
+	| %{__sed} '/\.so$/d'
+EOF
+%define __find_provides %{_builddir}/%{name}-%{version}/%{name}.prov
+%{__chmod} +x %{__find_provides}
+
 
 %post
 # Install schema
 export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
 gconftool-2 --makefile-install-rule /etc/gconf/schemas/apps_xchat_url_handler.schemas >& /dev/null || :
+
 
 %pre
 if [ "$1" -gt 1 ]; then
@@ -126,18 +121,58 @@ fi
 %files -f %{name}.lang
 %defattr(-,root,root)
 %doc README ChangeLog
+%doc plugins/plugin20.html plugins/perl/xchat2-perl.html
 %{_bindir}/xchat
-%{_bindir}/xchat-remote
 %dir %{_libdir}/xchat
 %dir %{_libdir}/xchat/plugins
 %{_libdir}/xchat/plugins/*.so
 %{_datadir}/applications/xchat.desktop
 %{_datadir}/pixmaps/*
 %{_sysconfdir}/gconf/schemas/apps_xchat_url_handler.schemas
+%{_datadir}/dbus-1/services/org.xchat.service.service
 
 %changelog
+* Mon May 28 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.2-2
+- merge updates by Remi Collet and Marius Feraru (#224180)
+- mention Tcl in description
+- add release and user name to buildroot
+- follow desktop-entry-spec on Name and GenericName as required by the Packaging
+  Guidelines
+- drop BR gtkspell-devel as it's not currently used
+
+* Thu Apr  5 2007 Remi Collet <RPMS@FamilleCollet.com> - 1:2.8.2-1.fc6.remi
+- update to 2.8.2
+
 * Sat Mar 24 2007 Matthias Clasen <mclasen@redhat.com> - 1:2.6.6-9
 - Own /usr/lib/xchat (#166731)
+
+* Thu Jan 25 2007 Marius Feraru <altblue@n0i.net> - 1:2.8.0-1.n0i.1
+- version 2.8.0
+- disabled some patches: nonblock, locale (fi, es)
+- enabled fast tinting
+- fixed "exchant" typo
+- switched to using the "make install" (DESTDIR works)
+- simplified gconf schema disabling method
+- dropped plugins mover
+- updated "Get rid of static libs"
+- dropped xchat-remote
+- updated build requirements
+- dropped "default-webbrowser" patches (xchat tries to do it better now)
+- do not provide "perl.so", "python.so", etc
+- own everything under %%{_libdir}/xchat
+- converted spec file to UTF8
+- fixed desktop entry category (dropping "Application")
+- keep plugins documentation
+
+* Tue Jan 16 2007 Remi Collet <RPMS@FamilleCollet.com> - 1:2.8.0-2.fc6.remi
+- add Provides/Osboletes for extensions (split RPM available on xchat.org).
+- longer description
+- enable tcl extension
+- Requires gtk >= 2.10.0
+
+* Mon Jan 15 2007 Remi Collet <RPMS@FamilleCollet.com> - 1:2.8.0-1.fc6.remi
+- update to 2.8.0
+- add upstream patches (xc280-fix-back.diff, xc280-fix-ja.diff)
 
 * Fri Nov  3 2006 Matthias Clasen <mclasen@redhat.com> - 1:2.6.6-8
 - Silence %%pre (#213838)
@@ -550,7 +585,7 @@ fi
 * Mon Jun 25 2001 Karsten Hopp <karsten@redhat.de>
 - use konqueror, not kfmclient on URLs
 
-* Fri Feb 23 2001 Trond Eivind Glomsrød <teg@redhat.com>
+* Fri Feb 23 2001 Trond Eivind GlomsrÃ¸d <teg@redhat.com>
 - langify
 - use %%{_tmppath}
 - make it compile
