@@ -3,7 +3,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.2
-Release:   4%{?dist}
+Release:   5%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPL
@@ -32,7 +32,6 @@ Requires(preun): GConf2 >= %{gconf_version}
 
 # Ensure that a compatible libperl is installed
 Requires: perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
-Requires: gtkspell
 
 Provides: xchat-perl = %{epoch}:%{version}-%{release}
 Obsoletes: xchat-perl < %{epoch}:%{version}-%{release}
@@ -146,6 +145,9 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Wed May 30 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.2-5
+- remove Requires: gtkspell as gtkspell is not currently being used
+
 * Mon May 28 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.2-4
 - set explicit libdir for Tcl so it's found on lib64 arches (Remi Collet)
 - move Tcl plugin into subpackage
