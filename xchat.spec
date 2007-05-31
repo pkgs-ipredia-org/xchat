@@ -3,7 +3,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.2
-Release:   5%{?dist}
+Release:   6%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPL
@@ -12,6 +12,8 @@ Source:    http://www.xchat.org/files/source/2.8/xchat-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 # Patches 0-9 reserved for official xchat.org patches
+# Fix defunct processes created by opening tray balloons
+Patch0: xc282-fixtrayzombies.diff
 
 Patch10: xchat-2.8.2-desktop.patch
 Patch12: xchat-1.8.7-use-sysconf-to-detect-cpus.patch
@@ -55,6 +57,7 @@ This package contains the X-Chat plugin providing the Tcl scripting interface.
 
 %prep
 %setup -q
+%patch0 -p1
 
 %patch10 -p1 -b .desktop-file
 %patch12 -p0 -b .use-sysconf-to-detect-cpus
@@ -145,6 +148,9 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Thu May 31 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.2-6
+- apply xc282-fixtrayzombies.diff from upstream
+
 * Wed May 30 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.2-5
 - remove Requires: gtkspell as gtkspell is not currently being used
 
