@@ -3,7 +3,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.2
-Release:   6%{?dist}
+Release:   6%{?dist}.1
 Epoch:     1
 Group:     Applications/Internet
 License:   GPL
@@ -15,7 +15,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # Fix defunct processes created by opening tray balloons
 Patch0: xc282-fixtrayzombies.diff
 
-Patch10: xchat-2.8.2-desktop.patch
+Patch10: xchat-2.4.4-redhat-desktop.patch
 Patch12: xchat-1.8.7-use-sysconf-to-detect-cpus.patch
 Patch19: xchat-2.0.2-freenode.patch
 Patch33: xchat-2.4.3-im_context_filter_keypress.patch
@@ -148,6 +148,9 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Thu May 31 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.2-6.1
+- revert to redhat-desktop patch pending further discussion
+
 * Thu May 31 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.2-6
 - apply xc282-fixtrayzombies.diff from upstream
 
