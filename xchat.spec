@@ -3,7 +3,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.2
-Release:   6%{?dist}.1
+Release:   7%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPL
@@ -148,7 +148,7 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
-* Thu May 31 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.2-6.1
+* Thu May 31 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.2-7
 - revert to redhat-desktop patch pending further discussion
 
 * Thu May 31 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.2-6
