@@ -3,7 +3,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.2
-Release:   7%{?dist}
+Release:   8%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPL
@@ -21,6 +21,8 @@ Patch19: xchat-2.0.2-freenode.patch
 Patch33: xchat-2.4.3-im_context_filter_keypress.patch
 # filed as 1262423 in the xchat bug tracker
 Patch34: xchat-2.4.4-unrealize.patch
+# see #241923
+Patch35: xchat-2.8.2-disable-tray-icon-by-default.patch
 
 BuildRequires: perl python-devel openssl-devel pkgconfig, tcl-devel
 BuildRequires: GConf2-devel
@@ -64,6 +66,7 @@ This package contains the X-Chat plugin providing the Tcl scripting interface.
 %patch19 -p0 -b .freenode
 %patch33 -p1 -b .im_context_filter_keypress
 %patch34 -p1 -b .unrealize
+%patch35 -p1 -b .tray-icon
 
 %build
 # Remove CVS files from source dirs so they're not installed into doc dirs.
@@ -148,6 +151,9 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Sat Jun  2 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.2-8
+- disable tray icon by default (#241923)
+
 * Thu May 31 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.2-7
 - revert to redhat-desktop patch pending further discussion
 
