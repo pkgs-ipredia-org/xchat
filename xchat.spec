@@ -3,7 +3,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.2
-Release:   8%{?dist}
+Release:   9%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPL
@@ -30,6 +30,7 @@ BuildRequires: dbus-devel >= 0.60, dbus-glib-devel >= 0.60
 BuildRequires: glib2-devel >= 2.10.0, gtk2-devel >= 2.10.0, bison >= 1.35
 BuildRequires: gettext /bin/sed
 BuildRequires: libtool
+BuildRequires: libsexy-devel
 # For gconftool-2:
 Requires(post): GConf2 >= %{gconf_version}
 Requires(preun): GConf2 >= %{gconf_version}
@@ -82,11 +83,10 @@ export LDFLAGS=$(perl -MExtUtils::Embed -e ldopts)
            --enable-python \
            --enable-tcl=%{_libdir} \
            --enable-ipv6 \
-           --enable-spell=static \
+           --enable-spell=libsexy \
            --enable-shm
 
 # gtkspell breaks Input Method commit with ENTER
-# static works if the optional enchant package is installed
 
 make %{?_smp_mflags}
 
@@ -151,6 +151,10 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Tue Jun 12 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.2-9
+- build against system libsexy instead of static sexy-spell-entry now that this
+  is possible (Core-Extras merge)
+
 * Sat Jun  2 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.2-8
 - disable tray icon by default (#241923)
 
