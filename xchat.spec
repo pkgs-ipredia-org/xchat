@@ -3,7 +3,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.2
-Release:   10%{?dist}
+Release:   11%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPL
@@ -31,6 +31,7 @@ BuildRequires: glib2-devel >= 2.10.0, gtk2-devel >= 2.10.0, bison >= 1.35
 BuildRequires: gettext /bin/sed
 BuildRequires: libtool
 BuildRequires: libsexy-devel
+BuildRequires: desktop-file-utils >= 0.10
 # For gconftool-2:
 Requires(post): GConf2 >= %{gconf_version}
 Requires(preun): GConf2 >= %{gconf_version}
@@ -156,6 +157,9 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Thu Jun 21 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.2-11
+- add missing BR desktop-file-utils
+
 * Thu Jun 21 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.2-10
 - remove Application; and X-Red-Hat-Extras; categories from .desktop file
   (merge review #226551)
