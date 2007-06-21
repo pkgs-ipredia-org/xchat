@@ -3,7 +3,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.2
-Release:   9%{?dist}
+Release:   10%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPL
@@ -15,7 +15,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # Fix defunct processes created by opening tray balloons
 Patch0: xc282-fixtrayzombies.diff
 
-Patch10: xchat-2.4.4-redhat-desktop.patch
+Patch10: xchat-2.8.2-redhat-desktop.patch
 Patch12: xchat-1.8.7-use-sysconf-to-detect-cpus.patch
 Patch19: xchat-2.0.2-freenode.patch
 Patch33: xchat-2.4.3-im_context_filter_keypress.patch
@@ -95,8 +95,13 @@ make %{?_smp_mflags}
 %{__rm} -rf $RPM_BUILD_ROOT
 %{__make} install DESTDIR=$RPM_BUILD_ROOT GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL=1
 
-# Get rid of static libs
+# Get rid of libtool archives
 %{__rm} -f $RPM_BUILD_ROOT%{_libdir}/xchat/plugins/*.la
+
+# Install the .desktop file properly
+desktop-file-install --delete-original --vendor fedora   \
+  --dir $RPM_BUILD_ROOT%{_datadir}/applications          \
+  $RPM_BUILD_ROOT%{_datadir}/applications/xchat.desktop
 
 %find_lang %name
 
@@ -141,7 +146,7 @@ fi
 %dir %{_libdir}/xchat/plugins
 %{_libdir}/xchat/plugins/perl.so
 %{_libdir}/xchat/plugins/python.so
-%{_datadir}/applications/xchat.desktop
+%{_datadir}/applications/fedora-xchat.desktop
 %{_datadir}/pixmaps/*
 %{_sysconfdir}/gconf/schemas/apps_xchat_url_handler.schemas
 %{_datadir}/dbus-1/services/org.xchat.service.service
@@ -151,6 +156,11 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Thu Jun 21 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.2-10
+- remove Application; and X-Red-Hat-Extras; categories from .desktop file
+  (merge review #226551)
+- install the .desktop file properly (merge review #226551)
+
 * Tue Jun 12 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.2-9
 - build against system libsexy instead of static sexy-spell-entry now that this
   is possible (Core-Extras merge)
