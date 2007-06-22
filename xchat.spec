@@ -3,7 +3,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.2
-Release:   11%{?dist}
+Release:   12%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPL
@@ -100,9 +100,9 @@ make %{?_smp_mflags}
 %{__rm} -f $RPM_BUILD_ROOT%{_libdir}/xchat/plugins/*.la
 
 # Install the .desktop file properly
-desktop-file-install --delete-original --vendor fedora   \
-  --dir $RPM_BUILD_ROOT%{_datadir}/applications          \
-  $RPM_BUILD_ROOT%{_datadir}/applications/xchat.desktop
+%{__rm} -f $RPM_BUILD_ROOT%{_datadir}/applications/xchat.desktop
+desktop-file-install --vendor="" \
+  --dir $RPM_BUILD_ROOT%{_datadir}/applications xchat.desktop
 
 %find_lang %name
 
@@ -147,7 +147,7 @@ fi
 %dir %{_libdir}/xchat/plugins
 %{_libdir}/xchat/plugins/perl.so
 %{_libdir}/xchat/plugins/python.so
-%{_datadir}/applications/fedora-xchat.desktop
+%{_datadir}/applications/xchat.desktop
 %{_datadir}/pixmaps/*
 %{_sysconfdir}/gconf/schemas/apps_xchat_url_handler.schemas
 %{_datadir}/dbus-1/services/org.xchat.service.service
@@ -157,6 +157,9 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Fri Jun 22 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.2-12
+- install the .desktop file with --vendor="" to keep the old name
+
 * Thu Jun 21 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.2-11
 - add missing BR desktop-file-utils
 
