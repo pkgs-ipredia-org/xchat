@@ -2,8 +2,8 @@
 
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
-Version:   2.8.2
-Release:   12%{?dist}
+Version:   2.8.4
+Release:   1%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPL
@@ -12,17 +12,15 @@ Source:    http://www.xchat.org/files/source/2.8/xchat-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 # Patches 0-9 reserved for official xchat.org patches
-# Fix defunct processes created by opening tray balloons
-Patch0: xc282-fixtrayzombies.diff
 
-Patch10: xchat-2.8.2-redhat-desktop.patch
+Patch10: xchat-2.8.4-redhat-desktop.patch
 Patch12: xchat-1.8.7-use-sysconf-to-detect-cpus.patch
 Patch19: xchat-2.0.2-freenode.patch
 Patch33: xchat-2.4.3-im_context_filter_keypress.patch
 # filed as 1262423 in the xchat bug tracker
 Patch34: xchat-2.4.4-unrealize.patch
 # see #241923
-Patch35: xchat-2.8.2-disable-tray-icon-by-default.patch
+Patch35: xchat-2.8.4-disable-tray-icon-by-default.patch
 
 BuildRequires: perl python-devel openssl-devel pkgconfig, tcl-devel
 BuildRequires: GConf2-devel
@@ -61,7 +59,6 @@ This package contains the X-Chat plugin providing the Tcl scripting interface.
 
 %prep
 %setup -q
-%patch0 -p1
 
 %patch10 -p1 -b .desktop-file
 %patch12 -p0 -b .use-sysconf-to-detect-cpus
@@ -157,6 +154,11 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Wed Jul  4 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.4-1
+- update to 2.8.4
+- drop xc282-fixtrayzombies.diff (already in 2.8.4)
+- rebase redhat-desktop and tray-icon patches
+
 * Fri Jun 22 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.2-12
 - install the .desktop file with --vendor="" to keep the old name
 
