@@ -2,8 +2,8 @@
 
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
-Version:   2.8.2
-Release:   8%{?dist}
+Version:   2.8.4
+Release:   1%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPL
@@ -12,17 +12,15 @@ Source:    http://www.xchat.org/files/source/2.8/xchat-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 # Patches 0-9 reserved for official xchat.org patches
-# Fix defunct processes created by opening tray balloons
-Patch0: xc282-fixtrayzombies.diff
 
-Patch10: xchat-2.4.4-redhat-desktop.patch
+Patch10: xchat-2.8.4-redhat-desktop.patch
 Patch12: xchat-1.8.7-use-sysconf-to-detect-cpus.patch
 Patch19: xchat-2.0.2-freenode.patch
 Patch33: xchat-2.4.3-im_context_filter_keypress.patch
 # filed as 1262423 in the xchat bug tracker
 Patch34: xchat-2.4.4-unrealize.patch
 # see #241923
-Patch35: xchat-2.8.2-disable-tray-icon-by-default.patch
+Patch35: xchat-2.8.4-disable-tray-icon-by-default.patch
 
 BuildRequires: perl python-devel openssl-devel pkgconfig, tcl-devel
 BuildRequires: GConf2-devel
@@ -30,6 +28,8 @@ BuildRequires: dbus-devel >= 0.60, dbus-glib-devel >= 0.60
 BuildRequires: glib2-devel >= 2.10.0, gtk2-devel >= 2.10.0, bison >= 1.35
 BuildRequires: gettext /bin/sed
 BuildRequires: libtool
+BuildRequires: libsexy-devel
+BuildRequires: desktop-file-utils >= 0.10
 # For gconftool-2:
 Requires(post): GConf2 >= %{gconf_version}
 Requires(preun): GConf2 >= %{gconf_version}
@@ -59,7 +59,6 @@ This package contains the X-Chat plugin providing the Tcl scripting interface.
 
 %prep
 %setup -q
-%patch0 -p1
 
 %patch10 -p1 -b .desktop-file
 %patch12 -p0 -b .use-sysconf-to-detect-cpus
@@ -82,11 +81,10 @@ export LDFLAGS=$(perl -MExtUtils::Embed -e ldopts)
            --enable-python \
            --enable-tcl=%{_libdir} \
            --enable-ipv6 \
-           --enable-spell=static \
+           --enable-spell=libsexy \
            --enable-shm
 
 # gtkspell breaks Input Method commit with ENTER
-# static works if the optional enchant package is installed
 
 make %{?_smp_mflags}
 
@@ -95,8 +93,13 @@ make %{?_smp_mflags}
 %{__rm} -rf $RPM_BUILD_ROOT
 %{__make} install DESTDIR=$RPM_BUILD_ROOT GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL=1
 
-# Get rid of static libs
+# Get rid of libtool archives
 %{__rm} -f $RPM_BUILD_ROOT%{_libdir}/xchat/plugins/*.la
+
+# Install the .desktop file properly
+%{__rm} -f $RPM_BUILD_ROOT%{_datadir}/applications/xchat.desktop
+desktop-file-install --vendor="" \
+  --dir $RPM_BUILD_ROOT%{_datadir}/applications xchat.desktop
 
 %find_lang %name
 
@@ -151,6 +154,26 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Wed Jul  4 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.4-1
+- update to 2.8.4
+- drop xc282-fixtrayzombies.diff (already in 2.8.4)
+- rebase redhat-desktop and tray-icon patches
+
+* Fri Jun 22 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.2-12
+- install the .desktop file with --vendor="" to keep the old name
+
+* Thu Jun 21 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.2-11
+- add missing BR desktop-file-utils
+
+* Thu Jun 21 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.2-10
+- remove Application; and X-Red-Hat-Extras; categories from .desktop file
+  (merge review #226551)
+- install the .desktop file properly (merge review #226551)
+
+* Tue Jun 12 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.2-9
+- build against system libsexy instead of static sexy-spell-entry now that this
+  is possible (Core-Extras merge)
+
 * Sat Jun  2 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.2-8
 - disable tray icon by default (#241923)
 
