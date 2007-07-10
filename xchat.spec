@@ -3,7 +3,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.4
-Release:   1%{?dist}
+Release:   2%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPL
@@ -12,6 +12,8 @@ Source:    http://www.xchat.org/files/source/2.8/xchat-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 # Patches 0-9 reserved for official xchat.org patches
+# Fix creation of ~/.xchat2/scrollback/ paths.
+Patch0: xc284-scrollbmkdir.diff
 
 Patch10: xchat-2.8.4-redhat-desktop.patch
 Patch12: xchat-1.8.7-use-sysconf-to-detect-cpus.patch
@@ -59,6 +61,7 @@ This package contains the X-Chat plugin providing the Tcl scripting interface.
 
 %prep
 %setup -q
+%patch0 -p1
 
 %patch10 -p1 -b .desktop-file
 %patch12 -p0 -b .use-sysconf-to-detect-cpus
@@ -154,6 +157,9 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Tue Jul 10 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.4-2
+- apply xc284-scrollbmkdir.diff from upstream
+
 * Wed Jul  4 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.4-1
 - update to 2.8.4
 - drop xc282-fixtrayzombies.diff (already in 2.8.4)
