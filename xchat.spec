@@ -3,10 +3,10 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.4
-Release:   2%{?dist}
+Release:   3%{?dist}
 Epoch:     1
 Group:     Applications/Internet
-License:   GPL
+License:   GPLv2+
 URL:       http://www.xchat.org
 Source:    http://www.xchat.org/files/source/2.8/xchat-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -157,6 +157,9 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Fri Aug  3 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.4-3
+- Specify GPL version in License tag.
+
 * Tue Jul 10 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.4-2
 - apply xc284-scrollbmkdir.diff from upstream
 
