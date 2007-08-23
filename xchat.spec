@@ -3,7 +3,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.4
-Release:   4%{?dist}
+Release:   4%{?dist}.1
 Epoch:     1
 Group:     Applications/Internet
 License:   GPLv2+
@@ -157,6 +157,9 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Thu Aug 23 2007 Remi Collet <Fedora@FamilleCollet.com> - 1:2.8.4-4.fc8.1
+- F-8 rebuild (BuildID)
+
 * Sat Aug 11 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.4-4
 - add missing BR perl(ExtUtils::Embed)
 
