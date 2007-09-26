@@ -3,7 +3,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.4
-Release:   3%{?dist}
+Release:   5%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPLv2+
@@ -14,6 +14,10 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # Patches 0-9 reserved for official xchat.org patches
 # Fix creation of ~/.xchat2/scrollback/ paths.
 Patch0: xc284-scrollbmkdir.diff
+# 1) Stops scrollback files growing too large by fixing the file-shrink code.
+# 2) Puts a "Display scrollback from previous session" into the Setup GUI
+#    (logging section) so people can turn this off without typing commands.
+Patch1: xc284-improvescrollback.diff
 
 Patch10: xchat-2.8.4-redhat-desktop.patch
 Patch12: xchat-1.8.7-use-sysconf-to-detect-cpus.patch
@@ -24,7 +28,7 @@ Patch34: xchat-2.4.4-unrealize.patch
 # see #241923
 Patch35: xchat-2.8.4-disable-tray-icon-by-default.patch
 
-BuildRequires: perl python-devel openssl-devel pkgconfig, tcl-devel
+BuildRequires: perl perl(ExtUtils::Embed) python-devel openssl-devel pkgconfig, tcl-devel
 BuildRequires: GConf2-devel
 BuildRequires: dbus-devel >= 0.60, dbus-glib-devel >= 0.60
 BuildRequires: glib2-devel >= 2.10.0, gtk2-devel >= 2.10.0, bison >= 1.35
@@ -62,6 +66,7 @@ This package contains the X-Chat plugin providing the Tcl scripting interface.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 
 %patch10 -p1 -b .desktop-file
 %patch12 -p0 -b .use-sysconf-to-detect-cpus
@@ -157,8 +162,17 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Wed Sep 26 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.4-5
+- apply xc284-improvescrollback.diff from upstream
+
+* Thu Aug 23 2007 Remi Collet <Fedora@FamilleCollet.com> - 1:2.8.4-4.fc8.1
+- F-8 rebuild (BuildID)
+
+* Sat Aug 11 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.4-4
+- add missing BR perl(ExtUtils::Embed)
+
 * Fri Aug  3 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.4-3
-- Specify GPL version in License tag.
+- specify GPL version in License tag
 
 * Tue Jul 10 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.4-2
 - apply xc284-scrollbmkdir.diff from upstream
