@@ -3,7 +3,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.4
-Release:   5%{?dist}
+Release:   6%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPLv2+
@@ -22,9 +22,6 @@ Patch1: xc284-improvescrollback.diff
 Patch10: xchat-2.8.4-redhat-desktop.patch
 Patch12: xchat-1.8.7-use-sysconf-to-detect-cpus.patch
 Patch19: xchat-2.0.2-freenode.patch
-Patch33: xchat-2.4.3-im_context_filter_keypress.patch
-# filed as 1262423 in the xchat bug tracker
-Patch34: xchat-2.4.4-unrealize.patch
 # see #241923
 Patch35: xchat-2.8.4-disable-tray-icon-by-default.patch
 
@@ -71,8 +68,6 @@ This package contains the X-Chat plugin providing the Tcl scripting interface.
 %patch10 -p1 -b .desktop-file
 %patch12 -p0 -b .use-sysconf-to-detect-cpus
 %patch19 -p0 -b .freenode
-%patch33 -p1 -b .im_context_filter_keypress
-%patch34 -p1 -b .unrealize
 %patch35 -p1 -b .tray-icon
 
 %build
@@ -162,6 +157,10 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Sat Oct 13 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.4-6
+- drop obsolete xchat-2.4.4-unrealize.patch (fixed upstream for a while)
+- drop broken xchat-2.4.3-im_context_filter_keypress.patch (#295331)
+
 * Wed Sep 26 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.4-5
 - apply xc284-improvescrollback.diff from upstream
 
