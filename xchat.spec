@@ -158,7 +158,7 @@ fi
 
 %changelog
 * Wed Dec  5 2007 Christopher Aillon <caillon@redhat.com> - 1:2.8.4-7
-- Rebuild
+- Fix the icon key in the .desktop file to validate
 
 * Sat Oct 13 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.4-6
 - drop obsolete xchat-2.4.4-unrealize.patch (fixed upstream for a while)

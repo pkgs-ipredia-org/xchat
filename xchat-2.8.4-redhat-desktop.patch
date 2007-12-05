@@ -22,7 +22,8 @@ diff -ur xchat-2.8.4/xchat.desktop xchat-2.8.4-redhat-desktop/xchat.desktop
 +Name=IRC
 +Comment=X-Chat
  Exec=xchat
- Icon=xchat.png
+-Icon=xchat.png
++Icon=xchat
  Terminal=false
  Type=Application
 -Categories=Application;Network;
