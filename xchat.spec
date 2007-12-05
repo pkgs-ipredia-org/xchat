@@ -3,7 +3,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.4
-Release:   6%{?dist}
+Release:   7%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPLv2+
@@ -157,6 +157,9 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Wed Dec  5 2007 Christopher Aillon <caillon@redhat.com> - 1:2.8.4-7
+- Rebuild
+
 * Sat Oct 13 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.4-6
 - drop obsolete xchat-2.4.4-unrealize.patch (fixed upstream for a while)
 - drop broken xchat-2.4.3-im_context_filter_keypress.patch (#295331)
