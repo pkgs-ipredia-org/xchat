@@ -3,7 +3,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.4
-Release:   7%{?dist}
+Release:   8%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPLv2+
@@ -18,6 +18,8 @@ Patch0: xc284-scrollbmkdir.diff
 # 2) Puts a "Display scrollback from previous session" into the Setup GUI
 #    (logging section) so people can turn this off without typing commands.
 Patch1: xc284-improvescrollback.diff
+# Scrollback shrinking code forgets to close().
+Patch2: xc284-fix-scrollbfdleak.diff
 
 Patch10: xchat-2.8.4-redhat-desktop.patch
 Patch12: xchat-1.8.7-use-sysconf-to-detect-cpus.patch
@@ -64,6 +66,7 @@ This package contains the X-Chat plugin providing the Tcl scripting interface.
 %setup -q
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %patch10 -p1 -b .desktop-file
 %patch12 -p0 -b .use-sysconf-to-detect-cpus
@@ -157,6 +160,9 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Wed Dec 19 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.4-8
+- apply xc284-fix-scrollbfdleak.diff from upstream
+
 * Wed Dec  5 2007 Christopher Aillon <caillon@redhat.com> - 1:2.8.4-7
 - Fix the icon key in the .desktop file to validate
 
