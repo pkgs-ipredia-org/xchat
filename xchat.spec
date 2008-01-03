@@ -3,7 +3,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.4
-Release:   9%{?dist}
+Release:   10%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPLv2+
@@ -162,6 +162,9 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Thu Jan  3 2008 Christopher Aillon <caillon@redhat.com> 1:2.8.4-10
+- Rebuild
+
 * Thu Dec 20 2007 Adam Jackson <ajax@redhat.com> 1:2.8.4-9
 - xchat-2.8.4-shm-pixmaps.patch: MIT-SHM pixmaps are optional, and when
   using EXA they are not available.  Check that the server supports them
