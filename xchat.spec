@@ -3,7 +3,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.4
-Release:   10%{?dist}
+Release:   8%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPLv2+
@@ -26,7 +26,6 @@ Patch12: xchat-1.8.7-use-sysconf-to-detect-cpus.patch
 Patch19: xchat-2.0.2-freenode.patch
 # see #241923
 Patch35: xchat-2.8.4-disable-tray-icon-by-default.patch
-Patch40: xchat-2.8.4-shm-pixmaps.patch
 
 BuildRequires: perl perl(ExtUtils::Embed) python-devel openssl-devel pkgconfig, tcl-devel
 BuildRequires: GConf2-devel
@@ -73,7 +72,6 @@ This package contains the X-Chat plugin providing the Tcl scripting interface.
 %patch12 -p0 -b .use-sysconf-to-detect-cpus
 %patch19 -p0 -b .freenode
 %patch35 -p1 -b .tray-icon
-%patch40 -p1 -b .shm-pixmaps
 
 %build
 # Remove CVS files from source dirs so they're not installed into doc dirs.
@@ -162,14 +160,6 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
-* Thu Jan  3 2008 Christopher Aillon <caillon@redhat.com> 1:2.8.4-10
-- Rebuild
-
-* Thu Dec 20 2007 Adam Jackson <ajax@redhat.com> 1:2.8.4-9
-- xchat-2.8.4-shm-pixmaps.patch: MIT-SHM pixmaps are optional, and when
-  using EXA they are not available.  Check that the server supports them
-  before trying to create them so we don't crash.
-
 * Wed Dec 19 2007 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.4-8
 - apply xc284-fix-scrollbfdleak.diff from upstream
 
