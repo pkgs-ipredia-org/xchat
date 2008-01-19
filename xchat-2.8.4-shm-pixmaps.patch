@@ -10,7 +10,7 @@ diff -up xchat-2.8.4/src/fe-gtk/xtext.c.jx xchat-2.8.4/src/fe-gtk/xtext.c
 +have_shm_pixmaps(Display *dpy)
 +{
 +    static int checked = 0, major, minor;
-+    Bool have = FALSE;
++    static Bool have = FALSE;
 +
 +    if (!checked) {
 +	XShmQueryVersion(dpy, &major, &minor, &have);
