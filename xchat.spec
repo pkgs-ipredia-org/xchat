@@ -3,7 +3,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.4
-Release:   11%{?dist}
+Release:   12%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPLv2+
@@ -162,6 +162,9 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Tue Feb  5 2008 Tom "spot" Callaway <tcallawa@redhat.com> - 1:2.8.4-12
+- rebuild for new perl
+
 * Sat Jan 19 2008 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.4-11
 - fix bug in xchat-2.8.4-shm-pixmaps.patch (Adam Jackson, #429218)
 
