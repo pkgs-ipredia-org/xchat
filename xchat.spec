@@ -3,7 +3,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.4
-Release:   14%{?dist}
+Release:   15%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPLv2+
@@ -34,6 +34,7 @@ BuildRequires: dbus-devel >= 0.60, dbus-glib-devel >= 0.60
 BuildRequires: glib2-devel >= 2.10.0, gtk2-devel >= 2.10.0, bison >= 1.35
 BuildRequires: gettext /bin/sed
 BuildRequires: libtool
+BuildRequires: libntlm-devel
 BuildRequires: libsexy-devel
 BuildRequires: desktop-file-utils >= 0.10
 # For gconftool-2:
@@ -82,8 +83,7 @@ find . -name CVS -type d | xargs rm -rf
 export CFLAGS="$RPM_OPT_FLAGS $(perl -MExtUtils::Embed -e ccopts)"
 export LDFLAGS=$(perl -MExtUtils::Embed -e ldopts)
 
-%configure --disable-panel \
-           --disable-textfe \
+%configure --disable-textfe \
            --enable-gtkfe \
            --enable-openssl \
            --enable-python \
@@ -162,6 +162,10 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Tue Apr  1 2008 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.4-15
+- remove --disable-panel which has been ignored since 2.0.0
+- add missing BR libntlm-devel (thanks to Karsten Hopp)
+
 * Mon Mar  3 2008 Tom "spot" Callaway <tcallawa@redhat.com> - 1:2.8.4-14
 - rebuild for new perl
 
