@@ -3,7 +3,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.4
-Release:   15%{?dist}
+Release:   16%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPLv2+
@@ -162,6 +162,9 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Thu May 22 2008 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.4-16
+- fix more bugs in xchat-2.8.4-shm-pixmaps.patch (#282691)
+
 * Tue Apr  1 2008 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.4-15
 - remove --disable-panel which has been ignored since 2.0.0
 - add missing BR libntlm-devel (thanks to Karsten Hopp)

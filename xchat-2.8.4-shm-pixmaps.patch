@@ -1,9 +1,9 @@
-diff -up xchat-2.8.4/src/fe-gtk/xtext.c.jx xchat-2.8.4/src/fe-gtk/xtext.c
---- xchat-2.8.4/src/fe-gtk/xtext.c.jx	2007-06-08 05:57:07.000000000 -0400
-+++ xchat-2.8.4/src/fe-gtk/xtext.c	2007-12-20 17:12:52.000000000 -0500
-@@ -3537,6 +3537,22 @@ get_image (GtkXText *xtext, Display *xdi
- 
- #endif
+diff -ur xchat-2.8.4/src/fe-gtk/xtext.c xchat-2.8.4-shm-pixmaps/src/fe-gtk/xtext.c
+--- xchat-2.8.4/src/fe-gtk/xtext.c	2007-06-08 11:57:07.000000000 +0200
++++ xchat-2.8.4-shm-pixmaps/src/fe-gtk/xtext.c	2008-05-23 00:56:52.000000000 +0200
+@@ -1347,6 +1347,22 @@
+ 	}
+ }
  
 +#ifdef USE_SHM
 +static int
@@ -21,10 +21,24 @@ diff -up xchat-2.8.4/src/fe-gtk/xtext.c.jx xchat-2.8.4/src/fe-gtk/xtext.c
 +}
 +#endif
 +
- static GdkPixmap *
- shade_pixmap (GtkXText * xtext, Pixmap p, int x, int y, int w, int h)
+ static void
+ gtk_xtext_paint (GtkWidget *widget, GdkRectangle *area)
  {
-@@ -3549,6 +3565,11 @@ shade_pixmap (GtkXText * xtext, Pixmap p
+@@ -1363,8 +1379,12 @@
+ 		{
+ 			xtext->last_win_x = x;
+ 			xtext->last_win_y = y;
+-#if !defined(USE_SHM) && !defined(WIN32)
++#ifndef WIN32
++#ifdef USE_SHM
++			if (xtext->shaded && !have_shm_pixmaps(GDK_WINDOW_XDISPLAY (xtext->draw_buf)))
++#else
+ 			if (xtext->shaded)
++#endif
+ 			{
+ 				xtext->recycle = TRUE;
+ 				gtk_xtext_load_trans (xtext);
+@@ -3549,6 +3569,11 @@
  	GC tgc;
  	Display *xdisplay = GDK_WINDOW_XDISPLAY (xtext->draw_buf);
  
@@ -36,7 +50,34 @@ diff -up xchat-2.8.4/src/fe-gtk/xtext.c.jx xchat-2.8.4/src/fe-gtk/xtext.c
  	XGetGeometry (xdisplay, p, &root, &dummy, &dummy, &width, &height,
  					  &dummy, &depth);
  
-@@ -3602,7 +3623,7 @@ shade_pixmap (GtkXText * xtext, Pixmap p
+@@ -3566,18 +3591,20 @@
+ 		XFreeGC (xdisplay, tgc);
+ 
+ #ifdef USE_SHM
+-		ximg = get_image (xtext, xdisplay, &xtext->shminfo, 0, 0, w, h, depth, tmp);
+-#else
+-		ximg = XGetImage (xdisplay, tmp, 0, 0, w, h, -1, ZPixmap);
++		if (shm_pixmaps)
++			ximg = get_image (xtext, xdisplay, &xtext->shminfo, 0, 0, w, h, depth, tmp);
++		else
+ #endif
++			ximg = XGetImage (xdisplay, tmp, 0, 0, w, h, -1, ZPixmap);
+ 		XFreePixmap (xdisplay, tmp);
+ 	} else
+ 	{
+ #ifdef USE_SHM
+-		ximg = get_image (xtext, xdisplay, &xtext->shminfo, x, y, w, h, depth, p);
+-#else
+-		ximg = XGetImage (xdisplay, p, x, y, w, h, -1, ZPixmap);
++		if (shm_pixmaps)
++			ximg = get_image (xtext, xdisplay, &xtext->shminfo, x, y, w, h, depth, p);
++		else
+ #endif
++			ximg = XGetImage (xdisplay, p, x, y, w, h, -1, ZPixmap);
+ 	}
+ 
+ 	if (!ximg)
+@@ -3602,7 +3629,7 @@
  	else
  	{
  #ifdef USE_SHM
@@ -45,7 +86,7 @@ diff -up xchat-2.8.4/src/fe-gtk/xtext.c.jx xchat-2.8.4/src/fe-gtk/xtext.c
  		{
  #if (GTK_MAJOR_VERSION == 2) && (GTK_MINOR_VERSION == 0)
  			shaded_pix = gdk_pixmap_foreign_new (
-@@ -3620,7 +3641,7 @@ shade_pixmap (GtkXText * xtext, Pixmap p
+@@ -3620,7 +3647,7 @@
  	}
  
  #ifdef USE_SHM
@@ -54,3 +95,12 @@ diff -up xchat-2.8.4/src/fe-gtk/xtext.c.jx xchat-2.8.4/src/fe-gtk/xtext.c
  #endif
  		XPutImage (xdisplay, GDK_WINDOW_XWINDOW (shaded_pix),
  					  GDK_GC_XGC (xtext->fgc), ximg, 0, 0, 0, 0, w, h);
+@@ -3640,7 +3667,7 @@
+ 	if (xtext->pixmap)
+ 	{
+ #ifdef USE_SHM
+-		if (xtext->shm)
++		if (xtext->shm && have_shm_pixmaps(GDK_WINDOW_XDISPLAY (xtext->draw_buf)))
+ 		{
+ 			XFreePixmap (GDK_WINDOW_XDISPLAY (xtext->pixmap),
+ 							 GDK_WINDOW_XWINDOW (xtext->pixmap));
