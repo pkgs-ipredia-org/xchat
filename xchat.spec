@@ -2,8 +2,8 @@
 
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
-Version:   2.8.4
-Release:   16%{?dist}
+Version:   2.8.6
+Release:   1%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPLv2+
@@ -12,14 +12,6 @@ Source:    http://www.xchat.org/files/source/2.8/xchat-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 # Patches 0-9 reserved for official xchat.org patches
-# Fix creation of ~/.xchat2/scrollback/ paths.
-Patch0: xc284-scrollbmkdir.diff
-# 1) Stops scrollback files growing too large by fixing the file-shrink code.
-# 2) Puts a "Display scrollback from previous session" into the Setup GUI
-#    (logging section) so people can turn this off without typing commands.
-Patch1: xc284-improvescrollback.diff
-# Scrollback shrinking code forgets to close().
-Patch2: xc284-fix-scrollbfdleak.diff
 
 Patch10: xchat-2.8.4-redhat-desktop.patch
 Patch12: xchat-1.8.7-use-sysconf-to-detect-cpus.patch
@@ -27,6 +19,12 @@ Patch19: xchat-2.0.2-freenode.patch
 # see #241923
 Patch35: xchat-2.8.4-disable-tray-icon-by-default.patch
 Patch40: xchat-2.8.4-shm-pixmaps.patch
+# Upstream XChat 2.8.6 defaults to Latin1 (what upstream calls the "IRC"
+# encoding). Default to UTF-8 instead (as previous versions did, at least when
+# running under a UTF-8 locale).
+# Both the "IRC" and "UTF-8" settings will try to accept both Latin1 and UTF-8
+# when it comes in, however "IRC" sends Latin1, "UTF-8" sends UTF-8.
+Patch41: xchat-2.8.6-default-utf8.patch
 
 BuildRequires: perl perl(ExtUtils::Embed) python-devel openssl-devel pkgconfig, tcl-devel
 BuildRequires: GConf2-devel
@@ -66,15 +64,13 @@ This package contains the X-Chat plugin providing the Tcl scripting interface.
 
 %prep
 %setup -q
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
 
 %patch10 -p1 -b .desktop-file
 %patch12 -p0 -b .use-sysconf-to-detect-cpus
 %patch19 -p0 -b .freenode
 %patch35 -p1 -b .tray-icon
 %patch40 -p1 -b .shm-pixmaps
+%patch41 -p1 -b .default-utf8
 
 %build
 # Remove CVS files from source dirs so they're not installed into doc dirs.
@@ -162,6 +158,11 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Sun Jun 15 2008 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.6-1
+- update to 2.8.6
+- drop upstream patches (already applied in 2.8.6)
+- set default charset to UTF-8 (2.8.6 changed it to Latin1)
+
 * Thu May 22 2008 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.4-16
 - fix more bugs in xchat-2.8.4-shm-pixmaps.patch (#282691)
 
