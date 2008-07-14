@@ -3,7 +3,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.6
-Release:   1%{?dist}
+Release:   2%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPLv2+
@@ -12,6 +12,7 @@ Source:    http://www.xchat.org/files/source/2.8/xchat-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 # Patches 0-9 reserved for official xchat.org patches
+Patch0: xc286-smallfixes.diff
 
 Patch10: xchat-2.8.4-redhat-desktop.patch
 Patch12: xchat-1.8.7-use-sysconf-to-detect-cpus.patch
@@ -64,6 +65,8 @@ This package contains the X-Chat plugin providing the Tcl scripting interface.
 
 %prep
 %setup -q
+# Various small fixes from CVS that are considered safe to apply to 2.8.6.
+%patch0 -p1
 
 %patch10 -p1 -b .desktop-file
 %patch12 -p0 -b .use-sysconf-to-detect-cpus
@@ -158,6 +161,9 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Mon Jul 14 2008 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.6-2
+- apply xc286-smallfixes.diff from upstream
+
 * Sun Jun 15 2008 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.6-1
 - update to 2.8.6
 - drop upstream patches (already applied in 2.8.6)
