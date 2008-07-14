@@ -76,6 +76,8 @@ This package contains the X-Chat plugin providing the Tcl scripting interface.
 %patch40 -p1 -b .shm-pixmaps
 %patch41 -p1 -b .default-utf8
 
+sed -i -e 's/#define GTK_DISABLE_DEPRECATED//g' src/fe-gtk/*.c
+
 %build
 # Remove CVS files from source dirs so they're not installed into doc dirs.
 find . -name CVS -type d | xargs rm -rf
@@ -164,6 +166,7 @@ fi
 %changelog
 * Mon Jul 14 2008 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.6-2
 - apply xc286-smallfixes.diff from upstream
+- don't #define GTK_DISABLE_DEPRECATED (fixes built against current GTK+)
 
 * Sun Jun 15 2008 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.6-1
 - update to 2.8.6
