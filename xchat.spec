@@ -1,3 +1,4 @@
+%define _default_patch_fuzz 2
 %define gconf_version 2.14
 
 Summary:   A popular and easy to use graphical IRC (chat) client
