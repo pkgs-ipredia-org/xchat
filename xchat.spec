@@ -166,7 +166,7 @@ fi
 %changelog
 * Mon Jul 14 2008 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.6-2
 - apply xc286-smallfixes.diff from upstream
-- don't #define GTK_DISABLE_DEPRECATED (fixes built against current GTK+)
+- don't #define GTK_DISABLE_DEPRECATED (fixes build against current GTK+)
 
 * Sun Jun 15 2008 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.6-1
 - update to 2.8.6
