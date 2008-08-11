@@ -4,7 +4,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.6
-Release:   2%{?dist}
+Release:   3%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPLv2+
@@ -164,6 +164,9 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Mon Aug 11 2008 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.6-3
+- rebuild for fixed redhat-rpm-config (#450271)
+
 * Mon Jul 14 2008 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.6-2
 - apply xc286-smallfixes.diff from upstream
 - don't #define GTK_DISABLE_DEPRECATED (fixes build against current GTK+)
