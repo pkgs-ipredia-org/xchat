@@ -4,7 +4,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.6
-Release:   3%{?dist}
+Release:   4%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPLv2+
@@ -164,6 +164,9 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Sun Nov 30 2008 Ignacio Vazquez-Abrams <ivazqueznet+rpm@gmail.com> - 1:2.8.6-4
+- Rebuild for Python 2.6
+
 * Mon Aug 11 2008 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.6-3
 - rebuild for fixed redhat-rpm-config (#450271)
 
