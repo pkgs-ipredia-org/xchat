@@ -4,7 +4,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.6
-Release:   5%{?dist}
+Release:   6%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPLv2+
@@ -118,7 +118,7 @@ desktop-file-install --vendor="" \
 %{__cat} << \EOF > %{name}.prov
 #!%{_buildshell}
 %{__grep} -v %{_docdir} - | %{__find_provides} $* \
-	| %{__sed} '/\.so$/d'
+	| %{__sed} '/\.so\(()(64bit)\)\?$/d'
 EOF
 %define __find_provides %{_builddir}/%{name}-%{version}/%{name}.prov
 %{__chmod} +x %{__find_provides}
@@ -164,6 +164,9 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Tue Feb 10 2009 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.6-6
+- fix filtering of Provides on lib64 architectures
+
 * Fri Jan 16 2009 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.6-5
 - rebuild for new OpenSSL
 
