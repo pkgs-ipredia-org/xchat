@@ -4,7 +4,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.6
-Release:   6%{?dist}
+Release:   7%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPLv2+
@@ -164,6 +164,9 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Thu Feb 26 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:2.8.6-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
+
 * Tue Feb 10 2009 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.6-6
 - fix filtering of Provides on lib64 architectures
 
