@@ -4,7 +4,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.6
-Release:   9%{?dist}
+Release:   10%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPLv2+
@@ -27,7 +27,7 @@ Patch40: xchat-2.8.4-shm-pixmaps.patch
 # Both the "IRC" and "UTF-8" settings will try to accept both Latin1 and UTF-8
 # when it comes in, however "IRC" sends Latin1, "UTF-8" sends UTF-8.
 Patch41: xchat-2.8.6-default-utf8.patch
-# fix literal underscore in "C_onnect" button (#512034, Matthias Clasen)
+# fix literal underscore in "C_onnect" button (#512034, Edward Sheldrake)
 Patch42: xchat-2.8.6-connect-mnemonic.patch
 
 BuildRequires: perl perl(ExtUtils::Embed) python-devel openssl-devel pkgconfig, tcl-devel
@@ -167,6 +167,9 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Sat Jul 18 2009 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.6-10
+- Fixed patch for the "C_onnect" issue (#512034, Edward Sheldrake)
+
 * Thu Jul 16 2009 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.6-9
 - Fix literal underscore in "C_onnect" button (#512034, Matthias Clasen)
 
