@@ -4,7 +4,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.6
-Release:   7%{?dist}
+Release:   11%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPLv2+
@@ -27,6 +27,8 @@ Patch40: xchat-2.8.4-shm-pixmaps.patch
 # Both the "IRC" and "UTF-8" settings will try to accept both Latin1 and UTF-8
 # when it comes in, however "IRC" sends Latin1, "UTF-8" sends UTF-8.
 Patch41: xchat-2.8.6-default-utf8.patch
+# fix literal underscore in "C_onnect" button (#512034, Edward Sheldrake)
+Patch42: xchat-2.8.6-connect-mnemonic.patch
 
 BuildRequires: perl perl(ExtUtils::Embed) python-devel openssl-devel pkgconfig, tcl-devel
 BuildRequires: GConf2-devel
@@ -75,6 +77,7 @@ This package contains the X-Chat plugin providing the Tcl scripting interface.
 %patch35 -p1 -b .tray-icon
 %patch40 -p1 -b .shm-pixmaps
 %patch41 -p1 -b .default-utf8
+%patch42 -p1 -b .connect-mnemonic
 
 sed -i -e 's/#define GTK_DISABLE_DEPRECATED//g' src/fe-gtk/*.c
 
@@ -164,6 +167,18 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Mon Jul 27 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:2.8.6-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
+
+* Sat Jul 18 2009 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.6-10
+- Fixed patch for the "C_onnect" issue (#512034, Edward Sheldrake)
+
+* Thu Jul 16 2009 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.6-9
+- Fix literal underscore in "C_onnect" button (#512034, Matthias Clasen)
+
+* Mon Jun 29 2009 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.6-8
+- Change Name in xchat.desktop to XChat IRC (#293841)
+
 * Thu Feb 26 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:2.8.6-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
 

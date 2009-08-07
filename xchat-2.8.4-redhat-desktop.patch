@@ -1,26 +1,9 @@
 diff -ur xchat-2.8.4/xchat.desktop xchat-2.8.4-redhat-desktop/xchat.desktop
 --- xchat-2.8.4/xchat.desktop	2007-06-23 17:50:27.000000000 +0200
 +++ xchat-2.8.4-redhat-desktop/xchat.desktop	2007-07-04 12:00:46.000000000 +0200
-@@ -1,23 +1,10 @@
- [Desktop Entry]
- Encoding=UTF-8
--Name=XChat IRC
--Name[zh_TW]=網路清談
--Comment[de]=IRC-Client
--Comment[es]=Aplicación de IRC
--Comment[fi]=IRC-sovellus
--Comment[fr]=Client IRC
--Comment[hu]=IRC-kliens
--Comment[lt]=IRC klientas
--Comment[no]=IRC-klient
--Comment[pt_BR]=Cliente de IRC
--Comment[sl]=Odjemalec IRC
--Comment[sv]=IRC-klient
--Comment[ro]=Client de IRC
--Comment[zh_TW]=X-Chat 聊天程式
--Comment=Chat with other people using Internet Relay Chat
-+Name=IRC
-+Comment=X-Chat
+@@ -16,8 +16,8 @@
+ Comment[zh_TW]=X-Chat 聊天程式
+ Comment=Chat with other people using Internet Relay Chat
  Exec=xchat
 -Icon=xchat.png
 +Icon=xchat
