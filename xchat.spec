@@ -4,7 +4,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.6
-Release:   12%{?dist}
+Release:   13%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPLv2+
@@ -17,7 +17,6 @@ Patch0: xc286-smallfixes.diff
 
 Patch10: xchat-2.8.4-redhat-desktop.patch
 Patch12: xchat-1.8.7-use-sysconf-to-detect-cpus.patch
-Patch19: xchat-2.0.2-freenode.patch
 # see #241923
 Patch35: xchat-2.8.4-disable-tray-icon-by-default.patch
 Patch40: xchat-2.8.4-shm-pixmaps.patch
@@ -73,7 +72,6 @@ This package contains the X-Chat plugin providing the Tcl scripting interface.
 
 %patch10 -p1 -b .desktop-file
 %patch12 -p0 -b .use-sysconf-to-detect-cpus
-%patch19 -p0 -b .freenode
 %patch35 -p1 -b .tray-icon
 %patch40 -p1 -b .shm-pixmaps
 %patch41 -p1 -b .default-utf8
@@ -167,6 +165,9 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Thu Sep 10 2009 Christopher Aillon <caillon@redhat.com> - 1:2.8.6-13
+- Drop the antiquated OPN reference
+
 * Fri Aug 21 2009 Tomas Mraz <tmraz@redhat.com> - 1:2.8.6-12
 - rebuilt with new openssl
 
