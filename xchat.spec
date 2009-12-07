@@ -4,7 +4,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.6
-Release:   13%{?dist}
+Release:   14%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPLv2+
@@ -165,6 +165,9 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Mon Dec  7 2009 Stepan Kasal <skasal@redhat.com> - 1:2.8.6-14
+- rebuild against perl 5.10.1
+
 * Thu Sep 10 2009 Christopher Aillon <caillon@redhat.com> - 1:2.8.6-13
 - Drop the antiquated OPN reference
 
