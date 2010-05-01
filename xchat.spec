@@ -4,7 +4,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.6
-Release:   15%{?dist}
+Release:   17%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPLv2+
@@ -31,6 +31,8 @@ Patch42: xchat-2.8.6-connect-mnemonic.patch
 # patch to add ability to change to tab with most recent activity
 # See http://sourceforge.net/tracker/?func=detail&aid=2022871&group_id=239&atid=350239
 Patch50: xchat-2.8.6-change-page-activity.patch
+# add port numbers for Freenode (Debarshi Ray)
+Patch51: xchat-2.8.6-freenode-ports.patch
 
 BuildRequires: perl perl(ExtUtils::Embed) python-devel openssl-devel pkgconfig, tcl-devel
 BuildRequires: GConf2-devel
@@ -80,6 +82,7 @@ This package contains the X-Chat plugin providing the Tcl scripting interface.
 %patch41 -p1 -b .default-utf8
 %patch42 -p1 -b .connect-mnemonic
 %patch50 -p1 -b .active-channel-switch
+%patch51 -p1 -b .freenode-ports
 
 sed -i -e 's/#define GTK_DISABLE_DEPRECATED//g' src/fe-gtk/*.c
 
@@ -114,9 +117,11 @@ make %{?_smp_mflags}
 # Install the .desktop file properly
 %{__rm} -f $RPM_BUILD_ROOT%{_datadir}/applications/xchat.desktop
 desktop-file-install --vendor="" \
-  --dir $RPM_BUILD_ROOT%{_datadir}/applications xchat.desktop
+  --dir $RPM_BUILD_ROOT%{_datadir}/applications \
+  --add-category=IRCClient \
+  --add-category=GTK xchat.desktop
 
-%find_lang %name
+%find_lang %{name}
 
 # do not Provide plugins .so
 %define _use_internal_dependency_generator 0
@@ -169,8 +174,16 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Wed Apr 21 2010 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.6-17
+- Add port numbers for Freenode (Debarshi Ray)
+
+* Fri Apr 09 2010 Rudolf Kastl <rkastl@redhat.com> - 1:2.8.6-16
+- Added IRCClient .desktop file subcategory (#485306)
+- Added GTK .desktop file subcategory
+- Added curly brackets to the name macro for consistency.
+
 * Wed Dec 16 2009 Kevin Fenzi <kevin@tummy.com> - 1:2.8.6-15
-- Add patch to allow switching to next channel with activity. 
+- Add patch to allow switching to next channel with activity.
 
 * Mon Dec  7 2009 Stepan Kasal <skasal@redhat.com> - 1:2.8.6-14
 - rebuild against perl 5.10.1
