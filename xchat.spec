@@ -4,7 +4,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.6
-Release:   17%{?dist}
+Release:   18%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPLv2+
@@ -174,6 +174,9 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Wed Jun 02 2010 Marcela Maslanova <mmaslano@redhat.com> - 1:2.8.6-18
+- Mass rebuild with perl-5.12.0
+
 * Wed Apr 21 2010 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.6-17
 - Add port numbers for Freenode (Debarshi Ray)
 
