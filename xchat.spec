@@ -4,7 +4,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.8
-Release:   1%{?dist}
+Release:   2%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPLv2+
@@ -92,7 +92,8 @@ export LDFLAGS=$(perl -MExtUtils::Embed -e ldopts)
            --enable-tcl=%{_libdir} \
            --enable-ipv6 \
            --enable-spell=libsexy \
-           --enable-shm
+           --enable-shm \
+           --enable-ntlm
 
 # gtkspell breaks Input Method commit with ENTER
 
@@ -166,6 +167,9 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Thu Jun 03 2010 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.8-2
+- --enable-ntlm (no longer enabled by default)
+
 * Thu Jun 03 2010 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.8-1
 - Update to 2.8.8 (#597735)
 - Use xz tarball (new in 2.8.8)
