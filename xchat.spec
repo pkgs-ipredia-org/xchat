@@ -3,31 +3,26 @@
 
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
-Version:   2.8.6
-Release:   17%{?dist}
+Version:   2.8.8
+Release:   1%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPLv2+
 URL:       http://www.xchat.org
-Source:    http://www.xchat.org/files/source/2.8/xchat-%{version}.tar.bz2
+Source:    http://www.xchat.org/files/source/2.8/xchat-%{version}.tar.xz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 # Patches 0-9 reserved for official xchat.org patches
-Patch0: xc286-smallfixes.diff
 
-Patch10: xchat-2.8.4-redhat-desktop.patch
 Patch12: xchat-1.8.7-use-sysconf-to-detect-cpus.patch
 # see #241923
 Patch35: xchat-2.8.4-disable-tray-icon-by-default.patch
-Patch40: xchat-2.8.4-shm-pixmaps.patch
 # Upstream XChat 2.8.6 defaults to Latin1 (what upstream calls the "IRC"
 # encoding). Default to UTF-8 instead (as previous versions did, at least when
 # running under a UTF-8 locale).
 # Both the "IRC" and "UTF-8" settings will try to accept both Latin1 and UTF-8
 # when it comes in, however "IRC" sends Latin1, "UTF-8" sends UTF-8.
 Patch41: xchat-2.8.6-default-utf8.patch
-# fix literal underscore in "C_onnect" button (#512034, Edward Sheldrake)
-Patch42: xchat-2.8.6-connect-mnemonic.patch
 # patch to add ability to change to tab with most recent activity
 # See http://sourceforge.net/tracker/?func=detail&aid=2022871&group_id=239&atid=350239
 Patch50: xchat-2.8.6-change-page-activity.patch
@@ -73,14 +68,11 @@ This package contains the X-Chat plugin providing the Tcl scripting interface.
 %prep
 %setup -q
 # Various small fixes from CVS that are considered safe to apply to 2.8.6.
-%patch0 -p1
+# (currently none)
 
-%patch10 -p1 -b .desktop-file
 %patch12 -p0 -b .use-sysconf-to-detect-cpus
 %patch35 -p1 -b .tray-icon
-%patch40 -p1 -b .shm-pixmaps
 %patch41 -p1 -b .default-utf8
-%patch42 -p1 -b .connect-mnemonic
 %patch50 -p1 -b .active-channel-switch
 %patch51 -p1 -b .freenode-ports
 
@@ -174,6 +166,15 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Thu Jun 03 2010 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.8-1
+- Update to 2.8.8 (#597735)
+- Use xz tarball (new in 2.8.8)
+- Drop smallfixes, redhat-desktop (remaining part), shm-pixmaps and
+  connect-mnemonic patches (all fixed upstream)
+
+* Wed Jun 02 2010 Marcela Maslanova <mmaslano@redhat.com> - 1:2.8.6-18
+- Mass rebuild with perl-5.12.0
+
 * Wed Apr 21 2010 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.6-17
 - Add port numbers for Freenode (Debarshi Ray)
 
