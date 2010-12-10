@@ -4,7 +4,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.8
-Release:   4%{?dist}
+Release:   6%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPLv2+
@@ -28,6 +28,9 @@ Patch41: xchat-2.8.6-default-utf8.patch
 Patch50: xchat-2.8.6-change-page-activity.patch
 # add port numbers for Freenode (Debarshi Ray)
 Patch51: xchat-2.8.6-freenode-ports.patch
+# work with libnotify 0.7
+# https://sourceforge.net/tracker/?func=detail&aid=3109838&group_id=239&atid=100239
+Patch52: xchat-2.8.8-libnotify07.patch
 
 BuildRequires: perl perl(ExtUtils::Embed) python-devel openssl-devel pkgconfig, tcl-devel
 BuildRequires: GConf2-devel
@@ -41,6 +44,9 @@ BuildRequires: desktop-file-utils >= 0.10
 # For gconftool-2:
 Requires(post): GConf2 >= %{gconf_version}
 Requires(preun): GConf2 >= %{gconf_version}
+
+# For aplay:
+Requires: alsa-utils
 
 # Ensure that a compatible libperl is installed
 Requires: perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
@@ -75,6 +81,7 @@ This package contains the X-Chat plugin providing the Tcl scripting interface.
 %patch41 -p1 -b .default-utf8
 %patch50 -p1 -b .active-channel-switch
 %patch51 -p1 -b .freenode-ports
+%patch52 -p1 -b .libnotify07
 
 sed -i -e 's/#define GTK_DISABLE_DEPRECATED//g' src/fe-gtk/*.c
 
@@ -167,6 +174,12 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Fri Dec 10 2010 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:2.8.8-6
+- Requires: alsa-utils for aplay (#661957)
+
+* Mon Nov 15 2010 Owen Taylor <otaylor@redhat.com> - 1:2.8.8-5
+- Add patch to work with libnotify-0.7
+
 * Tue Jul 27 2010 Mamoru Tasaka <mtasaka@ioa.s.u-tokyo.ac.jp> - 1:2.8.8-4
 - Rebuild against python 2.7
 
