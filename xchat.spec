@@ -4,7 +4,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.8
-Release:   7%{?dist}
+Release:   8%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPLv2+
@@ -31,6 +31,7 @@ Patch51: xchat-2.8.6-freenode-ports.patch
 # work with libnotify 0.7
 # https://sourceforge.net/tracker/?func=detail&aid=3109838&group_id=239&atid=100239
 Patch52: xchat-2.8.8-libnotify07.patch
+Patch53: xchat-2.8.8-libnotifyso4.patch
 
 BuildRequires: perl perl(ExtUtils::Embed) python-devel openssl-devel pkgconfig, tcl-devel
 BuildRequires: GConf2-devel
@@ -82,6 +83,7 @@ This package contains the X-Chat plugin providing the Tcl scripting interface.
 %patch50 -p1 -b .active-channel-switch
 %patch51 -p1 -b .freenode-ports
 %patch52 -p1 -b .libnotify07
+%patch53 -p1 -b .libnotifyso4
 
 sed -i -e 's/#define GTK_DISABLE_DEPRECATED//g' src/fe-gtk/*.c
 
@@ -174,6 +176,9 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Tue Apr  7 2011 Christopher Aillon <caillon@redhat.com> - 1:2.8.8-8
+- Update the dynamic libnotify check for the newer soname (#693362)
+
 * Mon Feb 07 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:2.8.8-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
