@@ -4,7 +4,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.8
-Release:   8%{?dist}
+Release:   9%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPLv2+
