@@ -31,8 +31,9 @@ Patch51: xchat-2.8.6-freenode-ports.patch
 # work with libnotify 0.7
 # https://sourceforge.net/tracker/?func=detail&aid=3109838&group_id=239&atid=100239
 Patch52: xchat-2.8.8-libnotify07.patch
-Patch53: xchat-2.8.8-libnotifyso4.patch
-
+# link against libnotify
+# https://sourceforge.net/tracker/?func=detail&aid=3280223&group_id=239&atid=100239
+Patch53: xchat-2.8.8-link-against-libnotify.patch
 BuildRequires: perl perl(ExtUtils::Embed) python-devel openssl-devel pkgconfig, tcl-devel
 BuildRequires: GConf2-devel
 BuildRequires: dbus-devel >= 0.60, dbus-glib-devel >= 0.60
@@ -42,6 +43,9 @@ BuildRequires: libtool
 BuildRequires: libntlm-devel
 BuildRequires: libsexy-devel
 BuildRequires: desktop-file-utils >= 0.10
+BuildRequires: libnotify-devel
+# For xchat-2.8.8-link-against-libnotify.patch
+BuildRequires: autoconf
 # For gconftool-2:
 Requires(post): GConf2 >= %{gconf_version}
 Requires(preun): GConf2 >= %{gconf_version}
@@ -83,7 +87,7 @@ This package contains the X-Chat plugin providing the Tcl scripting interface.
 %patch50 -p1 -b .active-channel-switch
 %patch51 -p1 -b .freenode-ports
 %patch52 -p1 -b .libnotify07
-%patch53 -p1 -b .libnotifyso4
+%patch53 -p1 -b .link-against-libnotify
 
 sed -i -e 's/#define GTK_DISABLE_DEPRECATED//g' src/fe-gtk/*.c
 
@@ -93,6 +97,10 @@ find . -name CVS -type d | xargs rm -rf
 
 export CFLAGS="$RPM_OPT_FLAGS $(perl -MExtUtils::Embed -e ccopts)"
 export LDFLAGS=$(perl -MExtUtils::Embed -e ldopts)
+
+# For xchat-2.8.8-link-against-libnotify.patch
+autoconf
+autoheader
 
 %configure --disable-textfe \
            --enable-gtkfe \
@@ -176,6 +184,9 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Tue Apr  7 2011 Christopher Aillon <caillon@redhat.com> - 1:2.8.8-9
+- Link against libnotify (#693362)
+
 * Tue Apr  7 2011 Christopher Aillon <caillon@redhat.com> - 1:2.8.8-8
 - Update the dynamic libnotify check for the newer soname (#693362)
 
