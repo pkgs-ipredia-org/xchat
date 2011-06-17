@@ -4,7 +4,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.8
-Release:   9%{?dist}
+Release:   10%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPLv2+
@@ -184,6 +184,9 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Fri Jun 17 2011 Marcela Mašláňová <mmaslano@redhat.com> - 1:2.8.8-10
+- Perl mass rebuild
+
 * Tue Apr  7 2011 Christopher Aillon <caillon@redhat.com> - 1:2.8.8-9
 - Link against libnotify (#693362)
 
