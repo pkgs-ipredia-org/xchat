@@ -4,7 +4,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.8
-Release:   12%{?dist}
+Release:   13%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPLv2+
@@ -34,6 +34,8 @@ Patch52: xchat-2.8.8-libnotify07.patch
 # link against libnotify
 # https://sourceforge.net/tracker/?func=detail&aid=3280223&group_id=239&atid=100239
 Patch53: xchat-2.8.8-link-against-libnotify.patch
+# Only glib.h can be included and g_thread_init  should no longer be used
+Patch54: xchat-2.8.8-glib.patch
 BuildRequires: perl perl(ExtUtils::Embed) python-devel openssl-devel pkgconfig, tcl-devel
 BuildRequires: GConf2-devel
 BuildRequires: dbus-devel >= 0.60, dbus-glib-devel >= 0.60
@@ -88,6 +90,7 @@ This package contains the X-Chat plugin providing the Tcl scripting interface.
 %patch51 -p1 -b .freenode-ports
 %patch52 -p1 -b .libnotify07
 %patch53 -p1 -b .link-against-libnotify
+%patch54 -p0 -b .glib
 
 sed -i -e 's/#define GTK_DISABLE_DEPRECATED//g' src/fe-gtk/*.c
 
@@ -184,6 +187,9 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Sat Feb 25 2012 Bruno Wolff III <bruno@wolff.to> - 1:2.8.8-13
+- Adjust to glib changes so that xchat will build again
+
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:2.8.8-12
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
