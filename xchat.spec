@@ -36,6 +36,8 @@ Patch52: xchat-2.8.8-libnotify07.patch
 Patch53: xchat-2.8.8-link-against-libnotify.patch
 # Only glib.h can be included and g_thread_init  should no longer be used
 Patch54: xchat-2.8.8-glib.patch
+# Use i2p servlist
+Patch70: xchat-2.8.8-i2pservlist.patch
 BuildRequires: perl perl(ExtUtils::Embed) python-devel openssl-devel pkgconfig, tcl-devel
 BuildRequires: GConf2-devel
 BuildRequires: dbus-devel >= 0.60, dbus-glib-devel >= 0.60
@@ -91,6 +93,7 @@ This package contains the X-Chat plugin providing the Tcl scripting interface.
 %patch52 -p1 -b .libnotify07
 %patch53 -p1 -b .link-against-libnotify
 %patch54 -p0 -b .glib
+%patch70 -p1 -b .i2pservlist
 
 sed -i -e 's/#define GTK_DISABLE_DEPRECATED//g' src/fe-gtk/*.c
 
