@@ -1,0 +1,30 @@
+diff -urNp xchat-2.8.8/src/common/cfgfiles.c xchat-2.8.8-notifications-and-tray/src/common/cfgfiles.c
+--- xchat-2.8.8/src/common/cfgfiles.c	2009-08-16 11:40:16.000000000 +0200
++++ xchat-2.8.8-notifications-and-tray/src/common/cfgfiles.c	2012-11-27 15:34:13.080403744 +0100
+@@ -670,11 +670,13 @@ load_config (void)
+ 	prefs.autoopendccchatwindow = 1;
+ 	prefs.userhost = 1;
+ 	prefs.gui_url_mod = 4;	/* ctrl */
+-	prefs.gui_tray = 1;
++	prefs.gui_tray = 0;
+ 	prefs.gui_pane_left_size = 100;
+ 	prefs.gui_pane_right_size = 100;
+ 	prefs.mainwindow_save = 1;
+ 	prefs.bantype = 2;
++	prefs.input_balloon_hilight = 1;
++	prefs.input_balloon_priv = 1;
+ 	prefs.input_balloon_time = 20;
+ 	prefs.input_flash_priv = prefs.input_flash_hilight = 1;
+ 	prefs.input_tray_priv = prefs.input_tray_hilight = 1;
+diff -urNp xchat-2.8.8/src/fe-gtk/maingui.c xchat-2.8.8-notifications-and-tray/src/fe-gtk/maingui.c
+--- xchat-2.8.8/src/fe-gtk/maingui.c	2010-05-16 05:15:55.000000000 +0200
++++ xchat-2.8.8-notifications-and-tray/src/fe-gtk/maingui.c	2012-11-27 16:05:27.609518192 +0100
+@@ -3107,7 +3107,7 @@ mg_tabwindow_de_cb (GtkWidget *widget, G
+ 		list = list->next;
+ 	}
+ 
+-	mg_open_quit_dialog (TRUE);
++	mg_open_quit_dialog (FALSE);
+ 	return TRUE;
+ }
+ 
