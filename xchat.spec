@@ -4,7 +4,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.8
-Release:   15%{?dist}
+Release:   16%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPLv2+
@@ -15,8 +15,8 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # Patches 0-9 reserved for official xchat.org patches
 
 Patch12: xchat-1.8.7-use-sysconf-to-detect-cpus.patch
-# see #241923
-Patch35: xchat-2.8.4-disable-tray-icon-by-default.patch
+# see #241923 & #880672
+Patch35: xchat-2.8.8-notifications-and-tray.patch
 # Upstream XChat 2.8.6 defaults to Latin1 (what upstream calls the "IRC"
 # encoding). Default to UTF-8 instead (as previous versions did, at least when
 # running under a UTF-8 locale).
@@ -187,6 +187,9 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Tue Nov 27 2012 Debarshi Ray <rishi@fedoraproject.org> - 1:2.8.8-16
+- Make sure default settings work with gnome-shell (#880672)
+
 * Sun Jul 22 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:2.8.8-15
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
