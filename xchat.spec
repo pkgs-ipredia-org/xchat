@@ -53,7 +53,7 @@ BuildRequires: perl perl(ExtUtils::Embed) python-devel openssl-devel pkgconfig, 
 BuildRequires: GConf2-devel
 BuildRequires: dbus-devel >= 0.60, dbus-glib-devel >= 0.60
 BuildRequires: glib2-devel >= 2.10.0, gtk2-devel >= 2.10.0, bison >= 1.35
-BuildRequires: gettext /bin/sed
+BuildRequires: gettext-devel /bin/sed
 BuildRequires: libtool
 BuildRequires: libntlm-devel
 BuildRequires: libsexy-devel
