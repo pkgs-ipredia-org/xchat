@@ -4,7 +4,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.8
-Release:   18%{?dist}
+Release:   19%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPLv2+
@@ -48,6 +48,10 @@ Patch53: xchat-2.8.8-link-against-libnotify.patch
 Patch54: xchat-2.8.8-glib.patch
 # http://sourceforge.net/p/xchat/bugs/1504/
 Patch55: xchat-2.8.8-hires-icons.patch
+# http://sourceforge.net/p/xchat/bugs/1506/
+Patch56: xchat-2.8.8-xdg-dirs.patch
+# http://sourceforge.net/p/xchat/bugs/1397/
+Patch57: xchat-2.8.8-desktop-file-name.patch
 
 BuildRequires: perl perl(ExtUtils::Embed) python-devel openssl-devel pkgconfig, tcl-devel
 BuildRequires: GConf2-devel
@@ -107,6 +111,8 @@ This package contains the X-Chat plugin providing the Tcl scripting interface.
 %patch53 -p1 -b .link-against-libnotify
 %patch54 -p0 -b .glib
 %patch55 -p1 -b .hires-icons
+%patch56 -p1 -b .xdg-dirs
+%patch57 -p1 -b .desktop-file-name
 
 sed -i -e 's/#define GTK_DISABLE_DEPRECATED//g' src/fe-gtk/*.c
 
@@ -207,6 +213,12 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Mon Jun 10 2013 Debarshi Ray <rishi@fedoraproject.org> - 1:2.8.8-19
+- Use XDG_CONFIG_HOME instead of home for config files
+  (http://sourceforge.net/p/xchat/bugs/1506/)
+- Use name and generic name correctly in desktop file
+  (http://sourceforge.net/p/xchat/bugs/1397/)
+
 * Fri Jun 07 2013 Debarshi Ray <rishi@fedoraproject.org> - 1:2.8.8-18
 - Add hi-res icons (http://sourceforge.net/p/xchat/bugs/1504/)
 
