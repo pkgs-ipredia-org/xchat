@@ -4,12 +4,22 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.8
-Release:   17%{?dist}
+Release:   18%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPLv2+
 URL:       http://www.xchat.org
-Source:    http://www.xchat.org/files/source/2.8/xchat-%{version}.tar.xz
+Source0:   http://www.xchat.org/files/source/2.8/xchat-%{version}.tar.xz
+
+# http://sourceforge.net/p/xchat/bugs/1504/
+Source1:   hicolor_apps_16x16_%{name}.png
+Source2:   hicolor_apps_22x22_%{name}.png
+Source3:   hicolor_apps_24x24_%{name}.png
+Source4:   hicolor_apps_32x32_%{name}.png
+Source5:   hicolor_apps_48x48_%{name}.png
+Source6:   hicolor_apps_256x256_%{name}.png
+Source7:   %{name}.svg
+
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 # Patches 0-9 reserved for official xchat.org patches
@@ -36,6 +46,9 @@ Patch52: xchat-2.8.8-libnotify07.patch
 Patch53: xchat-2.8.8-link-against-libnotify.patch
 # Only glib.h can be included and g_thread_init  should no longer be used
 Patch54: xchat-2.8.8-glib.patch
+# http://sourceforge.net/p/xchat/bugs/1504/
+Patch55: xchat-2.8.8-hires-icons.patch
+
 BuildRequires: perl perl(ExtUtils::Embed) python-devel openssl-devel pkgconfig, tcl-devel
 BuildRequires: GConf2-devel
 BuildRequires: dbus-devel >= 0.60, dbus-glib-devel >= 0.60
@@ -48,6 +61,8 @@ BuildRequires: desktop-file-utils >= 0.10
 BuildRequires: libnotify-devel
 # For xchat-2.8.8-link-against-libnotify.patch
 BuildRequires: autoconf
+BuildRequires: automake
+
 # For gconftool-2:
 Requires(post): GConf2 >= %{gconf_version}
 Requires(preun): GConf2 >= %{gconf_version}
@@ -91,8 +106,17 @@ This package contains the X-Chat plugin providing the Tcl scripting interface.
 %patch52 -p1 -b .libnotify07
 %patch53 -p1 -b .link-against-libnotify
 %patch54 -p0 -b .glib
+%patch55 -p1 -b .hires-icons
 
 sed -i -e 's/#define GTK_DISABLE_DEPRECATED//g' src/fe-gtk/*.c
+
+cp -p %{SOURCE1} icons/
+cp -p %{SOURCE2} icons/
+cp -p %{SOURCE3} icons/
+cp -p %{SOURCE4} icons/
+cp -p %{SOURCE5} icons/
+cp -p %{SOURCE6} icons/
+cp -p %{SOURCE7} icons/
 
 %build
 # Remove CVS files from source dirs so they're not installed into doc dirs.
@@ -102,8 +126,7 @@ export CFLAGS="$RPM_OPT_FLAGS $(perl -MExtUtils::Embed -e ccopts)"
 export LDFLAGS=$(perl -MExtUtils::Embed -e ldopts)
 
 # For xchat-2.8.8-link-against-libnotify.patch
-autoconf
-autoheader
+./autogen.sh
 
 %configure --disable-textfe \
            --enable-gtkfe \
@@ -152,18 +175,14 @@ EOF
 export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
 gconftool-2 --makefile-install-rule /etc/gconf/schemas/apps_xchat_url_handler.schemas >& /dev/null || :
 
-
-%pre
-if [ "$1" -gt 1 ]; then
-  export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
-  gconftool-2 --makefile-uninstall-rule /etc/gconf/schemas/apps_xchat_url_handler.schemas >& /dev/null || :
+%postun
+if [ $1 -eq 0 ] ; then
+    /bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null
+    /usr/bin/gtk-update-icon-cache -f %{_datadir}/icons/hicolor &>/dev/null || :
 fi
 
-%preun
-if [ "$1" -eq 0 ]; then
-  export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
-  gconftool-2 --makefile-uninstall-rule /etc/gconf/schemas/apps_xchat_url_handler.schemas >& /dev/null || :
-fi
+%posttrans
+/usr/bin/gtk-update-icon-cache -f %{_datadir}/icons/hicolor &>/dev/null || :
 
 %clean
 %{__rm} -rf $RPM_BUILD_ROOT
@@ -178,6 +197,7 @@ fi
 %{_libdir}/xchat/plugins/perl.so
 %{_libdir}/xchat/plugins/python.so
 %{_datadir}/applications/xchat.desktop
+%{_datadir}/icons/hicolor/*/apps/xchat.png
 %{_datadir}/pixmaps/*
 %{_sysconfdir}/gconf/schemas/apps_xchat_url_handler.schemas
 %{_datadir}/dbus-1/services/org.xchat.service.service
@@ -187,6 +207,9 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Fri Jun 07 2013 Debarshi Ray <rishi@fedoraproject.org> - 1:2.8.8-18
+- Add hi-res icons (http://sourceforge.net/p/xchat/bugs/1504/)
+
 * Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:2.8.8-17
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
